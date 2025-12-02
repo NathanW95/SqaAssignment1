@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Create Post</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+  </head>
+  <body>
+    <header>
+      <h1>Blog with Spring Boot</h1>
+      <nav class="navbar">
+        <ul>
+          <li><a th:href="@{/}">Home</a></li>
+          <li><a th:href="@{/create}">Create Post</a></li>
+          <li><a th:href="@{/stats}">Stats</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <h1>Create Post</h1>
+      <form th:action="@{/create}" method="post">
+        <input type="text" name="title" placeholder="Title" required />
+        <input type="text" name="author" placeholder="Author" required />
+        <textarea name="content" placeholder="Content" required></textarea>
+        <button type="submit">Create</button>
+      </form>
+    </main>
+  </body>
+</html>

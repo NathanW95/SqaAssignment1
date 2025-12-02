@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Edit Post</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+  </head>
+  <body>
+    <header>
+      <h1>Blog with Spring Boot</h1>
+      <nav class="navbar">
+        <ul>
+          <li><a th:href="@{/}">Home</a></li>
+          <li><a th:href="@{/create}">Create Post</a></li>
+          <li><a th:href="@{/stats}">Stats</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <h1>Edit Post</h1>
+      <form th:action="@{'/edit/' + ${post.id}}" method="post">
+        <input type="text" name="title" th:value="${post.title}" required />
+        <textarea name="content" required th:text="${post.content}"></textarea>
+        <button type="submit">Save Changes</button>
+      </form>
+
+      <form th:action="@{'/delete/' + ${post.id}}" method="post">
+        <button type="submit" class="danger">Delete Post</button>
+      </form>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Blog Posts</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+  </head>
+  <body>
+    <header>
+      <h1>Blog with Spring Boot</h1>
+      <nav class="navbar">
+        <ul>
+          <li><a th:href="@{/}">Home</a></li>
+          <li><a th:href="@{/create}">Create Post</a></li>
+          <li><a th:href="@{/stats}">Stats</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <h1>Blog Posts</h1>
+      <ul>
+        <li th:each="post : ${posts}">
+          <a th:href="@{'/post/' + ${post.id}}" th:text="${post}"></a>
+        </li>
+      </ul>
+    </main>
+  </body>
+</html>

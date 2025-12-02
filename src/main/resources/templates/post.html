@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title th:text="${post.title}">Post</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+  </head>
+  <body>
+    <header>
+      <h1>Blog with Spring Boot</h1>
+      <nav class="navbar">
+        <ul>
+          <li><a th:href="@{/}">Home</a></li>
+          <li><a th:href="@{/create}">Create Post</a></li>
+          <li><a th:href="@{/stats}">Stats</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <h1 th:text="${post.title}">Post</h1>
+      <p class="post-meta">
+        By <span th:text="${post.author}">Author</span>
+        (Posted on <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">date</span>)
+      </p>
+      <p class="post-content" th:text="${post.content}"></p>
+
+      <a th:href="@{'/edit/' + ${post.id}}">Edit Post</a>
+    </main>
+  </body>
+</html>
