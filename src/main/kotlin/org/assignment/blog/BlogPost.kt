@@ -7,8 +7,6 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import java.time.LocalDateTime
-import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.jpa.repository.Query
 
 @Entity
 @Table(name = "blog_post")
@@ -30,11 +28,4 @@ class BlogPost(
     var author: String = "",
 ) {
     override fun toString(): String = "\"$title\" by $author (${createdAt.toLocalDate()})"
-}
-
-interface BlogPostRepository : JpaRepository<BlogPost, Long> {
-
-    // Equivalent of BlogPost.get_post_lengths() using JPQL over the BlogPost entity
-    @Query("SELECT LENGTH(b.title) + LENGTH(b.content) FROM BlogPost b")
-    fun getPostLengths(): List<Int>
 }
