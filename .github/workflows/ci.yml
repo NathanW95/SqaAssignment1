@@ -28,10 +28,11 @@ jobs:
       run: ./gradlew spotlessCheck
 
     - name: Run tests
+      id: tests
       run: ./gradlew test --console=plain
 
     - name: Publish test report
-      if: success() || failure()
+      if: steps.tests.outcome == 'success' || steps.tests.outcome == 'failure'
       uses: dorny/test-reporter@v1
       with:
         name: Test Results
