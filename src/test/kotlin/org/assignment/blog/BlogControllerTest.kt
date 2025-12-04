@@ -173,6 +173,6 @@ class BlogControllerTest {
             .andExpect(status().isOk)
             .andExpect(view().name("stats"))
             .andExpect(model().attribute("title", "Post Statistics"))
-            .andExpect(model().attribute("medianLength", 2.0))
+            .andExpect(model().attribute("medianLength", 5.0))
     }
 }

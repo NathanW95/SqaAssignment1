@@ -119,3 +119,36 @@ gradlew.bat spotlessApply
 ```
 
 This will reformat your Kotlin source files and Gradle build scripts to match the project style.
+
+## Continuous Integration
+
+This project uses **GitHub Actions** for automated testing and code quality checks.
+
+### CI Pipeline
+
+Every push and pull request to the `master` branch automatically triggers:
+
+1. **Code formatting check** (`spotlessCheck`) - Ensures all code follows Kotlin style conventions
+2. **Test suite** (`test`) - Runs all JUnit tests with detailed output
+3. **Test reporting** - Publishes test results in an easy-to-read format in the GitHub Actions UI
+
+### Viewing CI Results
+
+- Go to the **Actions** tab in the GitHub repository
+- Click on any workflow run to see detailed results
+- The **"Publish test report"** step creates a visual test results UI:
+  - Click on the workflow run summary to see a "Test Results" section
+  - Shows all tests with ✅ pass/❌ fail status
+  - Displays error messages and stack traces for failures
+  - No need to download artifacts - results are viewable directly in the browser
+- The pipeline fails fast: if formatting is incorrect, tests are skipped
+
+### Running CI Checks Locally
+
+Before pushing, you can run the same checks locally:
+
+```bash
+./gradlew spotlessCheck test
+```
+
+This ensures your code will pass CI before you push.

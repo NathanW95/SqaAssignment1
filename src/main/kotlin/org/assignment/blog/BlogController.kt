@@ -14,7 +14,7 @@ class BlogController(
     @GetMapping("/")
     fun index(model: Model): String {
         model.addAttribute("title", "Blog Posts")
-            model.addAttribute("posts", repository.findAll())
+        model.addAttribute("posts", repository.findAll())
         return "index"
     }
 
