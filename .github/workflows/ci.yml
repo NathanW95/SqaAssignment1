@@ -28,18 +28,13 @@ jobs:
       run: ./gradlew spotlessCheck
 
     - name: Run tests
-      run: ./gradlew test
+      run: ./gradlew test --console=plain
 
-    - name: Upload test results
+    - name: Publish test report
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: dorny/test-reporter@v1
       with:
-        name: test-results
-        path: build/reports/tests/test/
-
-    - name: Upload test report
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: test-report
-        path: build/test-results/test/
+        name: Test Results
+        path: build/test-results/test/*.xml
+        reporter: java-junit
+        fail-on-error: true
