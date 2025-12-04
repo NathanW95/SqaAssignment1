@@ -14,16 +14,12 @@ class BlogPost(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
-
     @Column(length = 100, nullable = false)
     var title: String = "",
-
     @Column(columnDefinition = "TEXT", nullable = false)
     var content: String = "",
-
     @Column(name = "created_at", nullable = false)
     var createdAt: LocalDateTime = LocalDateTime.now(),
-
     @Column(length = 100, nullable = false)
     var author: String = "",
 ) {

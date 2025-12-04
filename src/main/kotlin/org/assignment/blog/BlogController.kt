@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam
 class BlogController(
     private val repository: BlogPostRepository,
 ) {
-
     @GetMapping("/")
     fun index(model: Model): String {
         model.addAttribute("title", "Blog Posts")
@@ -37,7 +36,10 @@ class BlogController(
     }
 
     @GetMapping("/post/{postId}")
-    fun post(@PathVariable("postId") postId: Long, model: Model): String {
+    fun post(
+        @PathVariable("postId") postId: Long,
+        model: Model,
+    ): String {
         val post = repository.findById(postId).orElseThrow()
         model.addAttribute("title", post.title)
         model.addAttribute("post", post)
@@ -45,7 +47,10 @@ class BlogController(
     }
 
     @GetMapping("/edit/{postId}")
-    fun editPage(@PathVariable("postId") postId: Long, model: Model): String {
+    fun editPage(
+        @PathVariable("postId") postId: Long,
+        model: Model,
+    ): String {
         val post = repository.findById(postId).orElseThrow()
         model.addAttribute("title", "Edit Post")
         model.addAttribute("post", post)
@@ -66,7 +71,9 @@ class BlogController(
     }
 
     @PostMapping("/delete/{postId}")
-    fun deleteAction(@PathVariable("postId") postId: Long): String {
+    fun deleteAction(
+        @PathVariable("postId") postId: Long,
+    ): String {
         if (repository.existsById(postId)) {
             repository.deleteById(postId)
         }
@@ -88,11 +95,12 @@ class BlogController(
 
         val sorted = lengths.sorted()
         val average = lengths.average()
-        val median = if (sorted.size % 2 == 1) {
-            sorted[sorted.size / 2].toDouble()
-        } else {
-            (sorted[sorted.size / 2 - 1] + sorted[sorted.size / 2]) / 2.0
-        }
+        val median =
+            if (sorted.size % 2 == 1) {
+                sorted[sorted.size / 2].toDouble()
+            } else {
+                (sorted[sorted.size / 2 - 1] + sorted[sorted.size / 2]) / 2.0
+            }
         val max = sorted.last()
         val min = sorted.first()
         val total = lengths.sum()

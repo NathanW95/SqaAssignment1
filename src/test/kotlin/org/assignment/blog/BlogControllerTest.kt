@@ -11,12 +11,15 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.model
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
 import java.util.Optional
 
 @WebMvcTest(BlogController::class)
 class BlogControllerTest {
-
     @Autowired
     lateinit var mockMvc: MockMvc
 
@@ -25,15 +28,17 @@ class BlogControllerTest {
 
     @Test
     fun `GIVEN existing posts WHEN GET index THEN list is shown`() {
-        val post = BlogPost(
-            id = 1L,
-            title = "Hello",
-            content = "Content",
-            author = "Alice",
-        )
+        val post =
+            BlogPost(
+                id = 1L,
+                title = "Hello",
+                content = "Content",
+                author = "Alice",
+            )
         whenever(repository.findAll()).thenReturn(listOf(post))
 
-        mockMvc.perform(get("/"))
+        mockMvc
+            .perform(get("/"))
             .andExpect(status().isOk)
             .andExpect(view().name("index"))
             .andExpect(model().attributeExists("posts"))
@@ -42,7 +47,8 @@ class BlogControllerTest {
 
     @Test
     fun `WHEN GET create THEN create view is returned`() {
-        mockMvc.perform(get("/create"))
+        mockMvc
+            .perform(get("/create"))
             .andExpect(status().isOk)
             .andExpect(view().name("create"))
             .andExpect(model().attribute("title", "Create Post"))
@@ -50,13 +56,13 @@ class BlogControllerTest {
 
     @Test
     fun `GIVEN valid form WHEN POST create THEN post is saved and redirected`() {
-        mockMvc.perform(
-            post("/create")
-                .param("title", "New Post")
-                .param("content", "Body")
-                .param("author", "Bob"),
-        )
-            .andExpect(status().is3xxRedirection)
+        mockMvc
+            .perform(
+                post("/create")
+                    .param("title", "New Post")
+                    .param("content", "Body")
+                    .param("author", "Bob"),
+            ).andExpect(status().is3xxRedirection)
             .andExpect(redirectedUrl("/"))
 
         verify(repository).save(
@@ -66,15 +72,17 @@ class BlogControllerTest {
 
     @Test
     fun `GIVEN existing post WHEN GET post THEN post page is shown`() {
-        val post = BlogPost(
-            id = 1L,
-            title = "Title",
-            content = "Body",
-            author = "Alice",
-        )
+        val post =
+            BlogPost(
+                id = 1L,
+                title = "Title",
+                content = "Body",
+                author = "Alice",
+            )
         whenever(repository.findById(1L)).thenReturn(Optional.of(post))
 
-        mockMvc.perform(get("/post/1"))
+        mockMvc
+            .perform(get("/post/1"))
             .andExpect(status().isOk)
             .andExpect(view().name("post"))
             .andExpect(model().attribute("post", post))
@@ -87,7 +95,8 @@ class BlogControllerTest {
         val post = BlogPost(id = 1L, title = "Old", content = "Body", author = "Alice")
         whenever(repository.findById(1L)).thenReturn(Optional.of(post))
 
-        mockMvc.perform(get("/edit/1"))
+        mockMvc
+            .perform(get("/edit/1"))
             .andExpect(status().isOk)
             .andExpect(view().name("edit"))
             .andExpect(model().attribute("post", post))
@@ -98,12 +107,12 @@ class BlogControllerTest {
         val post = BlogPost(id = 1L, title = "Old", content = "Old content", author = "Alice")
         whenever(repository.findById(1L)).thenReturn(Optional.of(post))
 
-        mockMvc.perform(
-            post("/edit/1")
-                .param("title", "New")
-                .param("content", "New content"),
-        )
-            .andExpect(status().is3xxRedirection)
+        mockMvc
+            .perform(
+                post("/edit/1")
+                    .param("title", "New")
+                    .param("content", "New content"),
+            ).andExpect(status().is3xxRedirection)
             .andExpect(redirectedUrl("/post/1"))
 
         verify(repository).save(
@@ -115,7 +124,8 @@ class BlogControllerTest {
     fun `GIVEN existing post WHEN POST delete THEN post is deleted and redirected`() {
         whenever(repository.existsById(1L)).thenReturn(true)
 
-        mockMvc.perform(post("/delete/1"))
+        mockMvc
+            .perform(post("/delete/1"))
             .andExpect(status().is3xxRedirection)
             .andExpect(redirectedUrl("/"))
 
@@ -126,7 +136,8 @@ class BlogControllerTest {
     fun `GIVEN lengths WHEN GET stats THEN stats are calculated and shown`() {
         whenever(repository.getPostLengths()).thenReturn(listOf(5, 7, 9))
 
-        mockMvc.perform(get("/stats"))
+        mockMvc
+            .perform(get("/stats"))
             .andExpect(status().isOk)
             .andExpect(view().name("stats"))
             .andExpect(model().attribute("title", "Post Statistics"))
@@ -141,7 +152,8 @@ class BlogControllerTest {
     fun `GIVEN no lengths WHEN GET stats is called THEN zero statistics are shown`() {
         whenever(repository.getPostLengths()).thenReturn(emptyList())
 
-        mockMvc.perform(get("/stats"))
+        mockMvc
+            .perform(get("/stats"))
             .andExpect(status().isOk)
             .andExpect(view().name("stats"))
             .andExpect(model().attribute("title", "Post Statistics"))
@@ -156,12 +168,11 @@ class BlogControllerTest {
     fun `GIVEN even number of lengths WHEN GET stats THEN median is average of middle two`() {
         whenever(repository.getPostLengths()).thenReturn(listOf(10, 2, 6, 4))
 
-        mockMvc.perform(get("/stats"))
+        mockMvc
+            .perform(get("/stats"))
             .andExpect(status().isOk)
             .andExpect(view().name("stats"))
             .andExpect(model().attribute("title", "Post Statistics"))
             .andExpect(model().attribute("medianLength", 5.0))
     }
-
-
 }
