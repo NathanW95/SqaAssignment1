@@ -85,3 +85,37 @@ This will compile and run all JUnit tests.
   ```
 
   Open this file in a browser to see per-test-class and per-test-case results.
+
+## Code formatting and style
+
+This project uses **Spotless** with **ktlint** to enforce consistent Kotlin formatting.
+
+### Check formatting
+
+To verify that all code follows the style rules (fails if issues are found):
+
+```bash
+./gradlew spotlessCheck
+```
+
+On Windows:
+
+```bash
+gradlew.bat spotlessCheck
+```
+
+### Auto-fix formatting
+
+To automatically fix formatting issues (whitespace, indentation, trailing newlines):
+
+```bash
+./gradlew spotlessApply
+```
+
+On Windows:
+
+```bash
+gradlew.bat spotlessApply
+```
+
+This will reformat your Kotlin source files and Gradle build scripts to match the project style.
