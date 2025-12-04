@@ -51,3 +51,37 @@ This is the Spring Boot + Kotlin version of the original Flask blog template.
 ### 4. Stopping the Application
 
 Press `Ctrl + C` in the terminal where `bootRun` is running.
+
+## Running tests
+
+All tests are run via the Gradle wrapper, so this works the same in IntelliJ, VS Code, or a plain terminal.
+
+From the project root:
+
+```bash
+./gradlew test
+```
+
+On Windows:
+
+```bash
+gradlew.bat test
+```
+
+This will compile and run all JUnit tests.
+
+### Viewing test results
+
+- **In the terminal**: Gradle prints a summary of passed/failed tests. For more detail you can run:
+
+  ```bash
+  ./gradlew test --info
+  ```
+
+- **HTML test report**: Gradle also generates a detailed report at:
+
+  ```text
+  build/reports/tests/test/index.html
+  ```
+
+  Open this file in a browser to see per-test-class and per-test-case results.
