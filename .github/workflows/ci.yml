@@ -31,7 +31,7 @@ jobs:
       run: ./gradlew test --console=plain
 
     - name: Publish test report
-      if: always()
+      if: success() || failure()
       uses: dorny/test-reporter@v1
       with:
         name: Test Results
