@@ -133,6 +133,19 @@ class BlogControllerTest {
     }
 
     @Test
+    fun `GIVEN non-existent post WHEN POST delete THEN redirects without error`() {
+        whenever(repository.existsById(999L)).thenReturn(false)
+
+        mockMvc
+            .perform(post("/delete/999"))
+            .andExpect(status().is3xxRedirection)
+            .andExpect(redirectedUrl("/"))
+
+        verify(repository).existsById(999L)
+        verify(repository, org.mockito.kotlin.never()).deleteById(999L)
+    }
+
+    @Test
     fun `GIVEN lengths WHEN GET stats THEN stats are calculated and shown`() {
         whenever(repository.getPostLengths()).thenReturn(listOf(5, 7, 9))
 
