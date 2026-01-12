@@ -15,6 +15,7 @@ class BlogPostTagRelationshipTest {
     @Autowired
     lateinit var tagRepository: TagRepository
 
+    // Simple edge cases - entities without relationships
     @Test
     fun `GIVEN post without tags WHEN post deleted THEN succeeds`() {
         val post = BlogPost(title = "Test", content = "Content", author = "Alice")
@@ -36,6 +37,7 @@ class BlogPostTagRelationshipTest {
         assertFalse(tagRepository.findById(tag.id!!).isPresent)
     }
 
+    // Basic relationship operations
     @Test
     fun `GIVEN post with tags WHEN post deleted THEN tags remain in database`() {
         val tag1 = tagRepository.save(Tag(name = "Kotlin"))
@@ -68,6 +70,7 @@ class BlogPostTagRelationshipTest {
         assertFalse(retrievedTag.posts.any { it.id == savedPost.id })
     }
 
+    // Modifying relationships
     @Test
     fun `GIVEN post with multiple tags WHEN one tag removed THEN other tags remain`() {
         val tag1 = tagRepository.save(Tag(name = "Backend"))
@@ -88,6 +91,7 @@ class BlogPostTagRelationshipTest {
         assertFalse(retrievedPost.tags.any { it.id == tag1.id })
     }
 
+    // Cascade behavior tests
     @Test
     fun `GIVEN post with unsaved tags WHEN post saved THEN tags are also saved`() {
         // UNSAVED tags (not calling tagRepository.save)
@@ -98,13 +102,14 @@ class BlogPostTagRelationshipTest {
         post.tags.add(tag1)
         post.tags.add(tag2)
 
-        val savedPost = blogPostRepository.save(post)
+        blogPostRepository.save(post)
         blogPostRepository.flush()
 
         assertTrue(tagRepository.findById(tag1.id!!).isPresent)
         assertTrue(tagRepository.findById(tag2.id!!).isPresent)
     }
 
+    // Complex workflow - proper tag deletion
     @Test
     fun `GIVEN tag removed from all posts WHEN tag deleted THEN succeeds`() {
         val tag = tagRepository.save(Tag(name = "Python"))

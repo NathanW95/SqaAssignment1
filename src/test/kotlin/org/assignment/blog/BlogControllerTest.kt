@@ -26,6 +26,7 @@ class BlogControllerTest {
     @MockitoBean
     lateinit var repository: BlogPostRepository
 
+    // Index/List view tests
     @Test
     fun `GIVEN existing posts WHEN GET index THEN list is shown`() {
         val post =
@@ -45,6 +46,7 @@ class BlogControllerTest {
             .andExpect(content().string(containsString("Hello")))
     }
 
+    // Create post tests
     @Test
     fun `WHEN GET create THEN create view is returned`() {
         mockMvc
@@ -70,6 +72,7 @@ class BlogControllerTest {
         )
     }
 
+    // View single post tests
     @Test
     fun `GIVEN existing post WHEN GET post THEN post page is shown`() {
         val post =
@@ -90,6 +93,7 @@ class BlogControllerTest {
             .andExpect(content().string(containsString("Body")))
     }
 
+    // Edit post tests
     @Test
     fun `GIVEN existing post WHEN GET edit THEN edit view is shown`() {
         val post = BlogPost(id = 1L, title = "Old", content = "Body", author = "Alice")
@@ -120,6 +124,7 @@ class BlogControllerTest {
         )
     }
 
+    // Delete post tests
     @Test
     fun `GIVEN existing post WHEN POST delete THEN post is deleted and redirected`() {
         whenever(repository.existsById(1L)).thenReturn(true)
@@ -145,6 +150,7 @@ class BlogControllerTest {
         verify(repository, org.mockito.kotlin.never()).deleteById(999L)
     }
 
+    // Statistics tests
     @Test
     fun `GIVEN lengths WHEN GET stats THEN stats are calculated and shown`() {
         whenever(repository.getPostLengths()).thenReturn(listOf(5, 7, 9))

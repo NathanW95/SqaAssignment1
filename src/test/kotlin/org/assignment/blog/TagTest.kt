@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class TagTest {
+    // Entity initialization tests
     @Test
     fun `GIVEN new tag WHEN created THEN id is null by default`() {
         val tag = Tag(name = "Travel")
@@ -18,6 +19,7 @@ class TagTest {
         assertTrue(tag.posts.isEmpty())
     }
 
+    // Entity behavior tests
     @Test
     fun `GIVEN tag WHEN toString called THEN returns name`() {
         val tag = Tag(name = "Travel")
@@ -26,6 +28,7 @@ class TagTest {
         assertEquals("Travel", result)
     }
 
+    // Relationship management tests
     @Test
     fun `GIVEN tag and post WHEN post added to tag THEN posts contains post`() {
         val tag = Tag(name = "Travel")

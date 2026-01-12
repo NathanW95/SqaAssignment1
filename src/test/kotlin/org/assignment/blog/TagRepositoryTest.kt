@@ -15,6 +15,7 @@ class TagRepositoryTest {
     @Autowired
     lateinit var tagRepository: TagRepository
 
+    // Basic persistence tests
     @Test
     fun `GIVEN new tag WHEN saved THEN can be retrieved by id`() {
         val tag = Tag(name = "Travel")
@@ -36,6 +37,7 @@ class TagRepositoryTest {
         }
     }
 
+    // Custom query method tests
     @Test
     fun `GIVEN tag WHEN findByName called THEN returns correct tag`() {
         val tag = tagRepository.save(Tag(name = "Food"))
@@ -53,6 +55,7 @@ class TagRepositoryTest {
         assertFalse(found.isPresent)
     }
 
+    // Validation tests
     @Test
     fun `GIVEN tag with blank name WHEN saved THEN validation fails`() {
         val tag = Tag(name = "")
