@@ -1,5 +1,6 @@
 package org.assignment.blog
 
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -25,7 +26,7 @@ class BlogPost(
     var createdAt: LocalDateTime = LocalDateTime.now(),
     @Column(length = 100, nullable = false)
     var author: String = "",
-    @ManyToMany
+    @ManyToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     @JoinTable(
         name = "blog_post_tags",
         joinColumns = [JoinColumn(name = "blog_post_id")],
