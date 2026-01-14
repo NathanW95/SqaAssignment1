@@ -26,6 +26,9 @@ class BlogControllerTest {
     @MockitoBean
     lateinit var repository: BlogPostRepository
 
+    @MockitoBean
+    lateinit var tagRepository: TagRepository
+
     // Index/List view tests
     @Test
     fun `GIVEN existing posts WHEN GET index THEN list is shown`() {
@@ -193,5 +196,199 @@ class BlogControllerTest {
             .andExpect(view().name("stats"))
             .andExpect(model().attribute("title", "Post Statistics"))
             .andExpect(model().attribute("medianLength", 5.0))
+    }
+
+    // Tag association tests
+    @Test
+    fun `GIVEN valid form with tags WHEN POST create THEN post is saved with tags`() {
+        val tag1 = Tag(id = 1L, name = "kotlin")
+        val tag2 = Tag(id = 2L, name = "spring")
+        
+        whenever(tagRepository.findByName("kotlin")).thenReturn(Optional.of(tag1))
+        whenever(tagRepository.findByName("spring")).thenReturn(Optional.of(tag2))
+
+        mockMvc
+            .perform(
+                post("/create")
+                    .param("title", "New Post")
+                    .param("content", "Body")
+                    .param("author", "Bob")
+                    .param("tags", "Kotlin, Spring"),
+            ).andExpect(status().is3xxRedirection)
+            .andExpect(redirectedUrl("/"))
+
+        verify(repository).save(
+            argThat { 
+                title == "New Post" && 
+                content == "Body" && 
+                author == "Bob" &&
+                tags.size == 2 &&
+                tags.any { it.name == "kotlin" } &&
+                tags.any { it.name == "spring" }
+            },
+        )
+    }
+
+    @Test
+    fun `GIVEN form with new tags WHEN POST create THEN new tags are created`() {
+        val newTag = Tag(id = 1L, name = "travel")
+        whenever(tagRepository.findByName("travel")).thenReturn(Optional.empty())
+        whenever(tagRepository.save(argThat { name == "travel" })).thenReturn(newTag)
+
+        mockMvc
+            .perform(
+                post("/create")
+                    .param("title", "Post")
+                    .param("content", "Content")
+                    .param("author", "Alice")
+                    .param("tags", "Travel"),
+            ).andExpect(status().is3xxRedirection)
+            .andExpect(redirectedUrl("/"))
+
+        verify(repository).save(
+            argThat { 
+                tags.size == 1 &&
+                tags.first().name == "travel"
+            },
+        )
+    }
+
+    @Test
+    fun `GIVEN form with empty tags WHEN POST create THEN post is saved without tags`() {
+        mockMvc
+            .perform(
+                post("/create")
+                    .param("title", "Post")
+                    .param("content", "Content")
+                    .param("author", "Alice")
+                    .param("tags", ""),
+            ).andExpect(status().is3xxRedirection)
+            .andExpect(redirectedUrl("/"))
+
+        verify(repository).save(
+            argThat { tags.isEmpty() },
+        )
+    }
+
+    @Test
+    fun `GIVEN existing post WHEN POST edit with tags THEN tags are updated`() {
+        val post = BlogPost(id = 1L, title = "Old", content = "Old content", author = "Alice")
+        val tag = Tag(id = 1L, name = "food")
+        
+        whenever(repository.findById(1L)).thenReturn(Optional.of(post))
+        whenever(tagRepository.findByName("food")).thenReturn(Optional.of(tag))
+
+        mockMvc
+            .perform(
+                post("/edit/1")
+                    .param("title", "New")
+                    .param("content", "New content")
+                    .param("tags", "Food"),
+            ).andExpect(status().is3xxRedirection)
+            .andExpect(redirectedUrl("/post/1"))
+
+        verify(repository).save(
+            argThat { 
+                id == 1L && 
+                title == "New" && 
+                content == "New content" &&
+                tags.size == 1 &&
+                tags.first().name == "food"
+            },
+        )
+    }
+
+    @Test
+    fun `GIVEN existing post WHEN POST edit with new tags THEN new tags are created`() {
+        val post = BlogPost(id = 1L, title = "Old", content = "Old content", author = "Alice")
+        val newTag = Tag(id = 2L, name = "travel")
+        
+        whenever(repository.findById(1L)).thenReturn(Optional.of(post))
+        whenever(tagRepository.findByName("travel")).thenReturn(Optional.empty())
+        whenever(tagRepository.save(argThat { name == "travel" })).thenReturn(newTag)
+
+        mockMvc
+            .perform(
+                post("/edit/1")
+                    .param("title", "Updated Title")
+                    .param("content", "Updated content")
+                    .param("tags", "Travel"),
+            ).andExpect(status().is3xxRedirection)
+            .andExpect(redirectedUrl("/post/1"))
+
+        verify(repository).save(
+            argThat { 
+                id == 1L && 
+                tags.size == 1 &&
+                tags.first().name == "travel"
+            },
+        )
+    }
+
+    // Tag normalization tests
+    @Test
+    fun `GIVEN mixed case tags WHEN POST create THEN tags are normalized to lowercase`() {
+        val kotlinTag = Tag(id = 1L, name = "kotlin")
+        whenever(tagRepository.findByName("kotlin")).thenReturn(Optional.of(kotlinTag))
+
+        mockMvc
+            .perform(
+                post("/create")
+                    .param("title", "Post")
+                    .param("content", "Content")
+                    .param("author", "Alice")
+                    .param("tags", "KoTlIn"),
+            ).andExpect(status().is3xxRedirection)
+            .andExpect(redirectedUrl("/"))
+
+        verify(repository).save(
+            argThat { 
+                tags.size == 1 &&
+                tags.first().name == "kotlin"
+            },
+        )
+    }
+
+    @Test
+    fun `GIVEN duplicate tags with different cases WHEN POST create THEN only one tag is stored`() {
+        val foodTag = Tag(id = 1L, name = "food")
+        whenever(tagRepository.findByName("food")).thenReturn(Optional.of(foodTag))
+
+        mockMvc
+            .perform(
+                post("/create")
+                    .param("title", "Post")
+                    .param("content", "Content")
+                    .param("author", "Alice")
+                    .param("tags", "Food, FOOD, food"),
+            ).andExpect(status().is3xxRedirection)
+            .andExpect(redirectedUrl("/"))
+
+        verify(repository).save(
+            argThat { 
+                tags.size == 1 &&
+                tags.first().name == "food"
+            },
+        )
+    }
+
+    @Test
+    fun `GIVEN uppercase tag WHEN POST create THEN tag is stored as lowercase`() {
+        val travelTag = Tag(id = 1L, name = "travel")
+        whenever(tagRepository.findByName("travel")).thenReturn(Optional.empty())
+        whenever(tagRepository.save(argThat { name == "travel" })).thenReturn(travelTag)
+
+        mockMvc
+            .perform(
+                post("/create")
+                    .param("title", "Post")
+                    .param("content", "Content")
+                    .param("author", "Alice")
+                    .param("tags", "TRAVEL"),
+            ).andExpect(status().is3xxRedirection)
+            .andExpect(redirectedUrl("/"))
+
+        verify(tagRepository).findByName("travel")
+        verify(tagRepository).save(argThat { name == "travel" })
     }
 }

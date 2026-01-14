@@ -23,6 +23,13 @@
       </p>
       <p class="post-content" th:text="${post.content}"></p>
 
+      <div class="tags" th:if="${!post.tags.isEmpty()}">
+        <strong>Tags:</strong>
+        <span th:each="tag, iterStat : ${post.tags}" class="tag">
+          <span th:text="${tag.name}"></span><span th:if="${!iterStat.last}"> </span>
+        </span>
+      </div>
+
       <a th:href="@{'/edit/' + ${post.id}}">Edit Post</a>
     </main>
   </body>

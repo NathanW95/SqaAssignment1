@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam
 @Controller
 class BlogController(
     private val repository: BlogPostRepository,
+    private val tagRepository: TagRepository,
 ) {
     @GetMapping("/")
     fun index(model: Model): String {
@@ -29,8 +30,20 @@ class BlogController(
         @RequestParam title: String,
         @RequestParam content: String,
         @RequestParam author: String,
+        @RequestParam(required = false) tags: String?,
     ): String {
         val post = BlogPost(title = title, content = content, author = author)
+
+        if (!tags.isNullOrBlank()) {
+            val tagNames = tags.split(",").map { it.trim().lowercase() }.filter { it.isNotEmpty() }
+            tagNames.forEach { tagName ->
+                val tag = tagRepository.findByName(tagName).orElseGet {
+                    tagRepository.save(Tag(name = tagName))
+                }
+                post.tags.add(tag)
+            }
+        }
+        
         repository.save(post)
         return "redirect:/"
     }
@@ -52,8 +65,10 @@ class BlogController(
         model: Model,
     ): String {
         val post = repository.findById(postId).orElseThrow()
+        val tagString = post.tags.joinToString(", ") { it.name }
         model.addAttribute("title", "Edit Post")
         model.addAttribute("post", post)
+        model.addAttribute("tagString", tagString)
         return "edit"
     }
 
@@ -62,10 +77,24 @@ class BlogController(
         @PathVariable("postId") postId: Long,
         @RequestParam title: String,
         @RequestParam content: String,
+        @RequestParam(required = false) tags: String?,
     ): String {
         val post = repository.findById(postId).orElseThrow()
         post.title = title
         post.content = content
+
+        post.tags.clear()
+        if (!tags.isNullOrBlank()) {
+            val tagNames = tags.split(",").map { it.trim().lowercase() }.filter { it.isNotEmpty() }
+            tagNames.forEach { tagName ->
+                val tag = tagRepository.findByName(tagName).orElseGet {
+                    tagRepository.save(Tag(name = tagName))
+                }
+                post.tags.add(tag)
+            }
+        }
+
+        
         repository.save(post)
         return "redirect:/post/$postId"
     }
