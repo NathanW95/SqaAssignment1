@@ -16,20 +16,22 @@
       </nav>
     </header>
     <main>
-      <h1 th:text="${post.title}">Post</h1>
-      <p class="post-meta">
-        By <span th:text="${post.author}">Author</span>
-        (Posted on <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">date</span>)
-      </p>
-      <p class="post-content" th:text="${post.content}">Content</p>
-      <div class="tags-container" th:if="${!post.tags.isEmpty()}">
-        <span th:each="tag : ${post.tags}">
-          <span class="tag" th:text="${tag.name}">tag</span>
-        </span>
-      </div>
+      <div class="post-view-wrapper">
+        <h1 th:text="${post.title}">Post</h1>
+        <p class="post-meta">
+          By <span th:text="${post.author}">Author</span>
+          (Posted on <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">date</span>)
+        </p>
+        <p class="post-content" th:text="${post.content}">Content</p>
+        <div class="tags-container" th:if="${!post.tags.isEmpty()}">
+          <span th:each="tag : ${post.tags}">
+            <span class="tag" th:text="${tag.name}">tag</span>
+          </span>
+        </div>
 
-      <div class="post-actions">
-        <a th:href="@{'/edit/' + ${post.id}}">Edit Post</a>
+        <div class="post-actions">
+          <a th:href="@{'/edit/' + ${post.id}}">Edit Post</a>
+        </div>
       </div>
     </main>
   </body>

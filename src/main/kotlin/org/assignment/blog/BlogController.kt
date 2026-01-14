@@ -110,6 +110,19 @@ class BlogController(
         return "redirect:/"
     }
 
+    @GetMapping("/tag/{tagName}")
+    fun filterByTag(
+        @PathVariable tagName: String,
+        model: Model,
+    ): String {
+        val tag = tagRepository.findByName(tagName).orElse(null)
+            ?: throw NoSuchElementException("Tag not found: $tagName")
+        model.addAttribute("title", "Posts tagged with: $tagName")
+        model.addAttribute("posts", tag.posts)
+        model.addAttribute("filterTag", tagName)
+        return "index"
+    }
+
     @GetMapping("/stats")
     fun stats(model: Model): String {
         val lengths = repository.getPostLengths()
@@ -124,12 +137,12 @@ class BlogController(
         }
 
         val sorted = lengths.sorted()
-        val average = lengths.average()
+        val average = String.format("%.2f", lengths.average()).toDouble()
         val median =
             if (sorted.size % 2 == 1) {
-                sorted[sorted.size / 2].toDouble()
+                String.format("%.2f", sorted[sorted.size / 2].toDouble()).toDouble()
             } else {
-                (sorted[sorted.size / 2 - 1] + sorted[sorted.size / 2]) / 2.0
+                String.format("%.2f", (sorted[sorted.size / 2 - 1] + sorted[sorted.size / 2]) / 2.0).toDouble()
             }
         val max = sorted.last()
         val min = sorted.first()

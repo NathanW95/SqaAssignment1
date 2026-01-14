@@ -17,6 +17,10 @@
     </header>
     <main>
       <h1>Blog Posts</h1>
+      <div class="filter-indicator" th:if="${filterTag != null}">
+        <span>Filtering by tag: <strong th:text="${filterTag}">tag</strong></span>
+        <a th:href="@{/}" class="clear-filter-btn">Clear Filter</a>
+      </div>
       <ul>
         <li th:each="post : ${posts}">
           <a th:href="@{'/post/' + ${post.id}}" class="post-card-link">
@@ -24,7 +28,9 @@
             <p class="post-meta">By <span th:text="${post.author}">Author</span> on <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">Date</span></p>
             <div class="tags-container" th:if="${!post.tags.isEmpty()}">
               <span th:each="tag : ${post.tags}">
-                <span class="tag" th:text="${tag.name}">tag</span>
+                <a th:href="@{${(filterTag != null && filterTag == tag.name) ? '/' : '/tag/' + tag.name}}" 
+                   th:class="${filterTag != null && filterTag == tag.name} ? 'tag active' : 'tag'" 
+                   th:text="${tag.name}">tag</a>
               </span>
             </div>
           </a>

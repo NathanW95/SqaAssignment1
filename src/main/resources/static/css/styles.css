@@ -120,6 +120,15 @@ main li:hover {
   flex-grow: 1;
   margin-bottom: 10px;
   white-space: pre-wrap; /* Preserve line breaks */
+  word-wrap: break-word; /* Break long words */
+  overflow-wrap: break-word; /* Modern browsers */
+  max-width: 100%; /* Prevent overflow */
+}
+
+/* Post view page wrapper */
+.post-view-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 /* Form Styles */
@@ -214,6 +223,48 @@ main ul .tag {
 main ul .tag:hover {
   background-color: #d4c1ed;
   transform: translateY(-1px);
+}
+
+/* Active/filtered tag styling */
+.tag.active {
+  background-color: #822e81;
+  color: #fff;
+}
+
+/* Filter indicator banner */
+.filter-indicator {
+  background-color: #f0e6f5;
+  border: 1px solid #d4c1ed;
+  border-radius: 4px;
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filter-indicator span {
+  color: #5a3d7a;
+  font-size: 16px;
+}
+
+.filter-indicator strong {
+  color: #822e81;
+}
+
+.clear-filter-btn {
+  background-color: #822e81;
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.clear-filter-btn:hover {
+  background-color: #5a1f59;
 }
 
 .tags-container {

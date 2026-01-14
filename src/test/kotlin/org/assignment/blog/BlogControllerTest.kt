@@ -1,6 +1,7 @@
 package org.assignment.blog
 
 import org.hamcrest.Matchers.containsString
+import org.hamcrest.Matchers.not
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.verify
@@ -390,5 +391,51 @@ class BlogControllerTest {
 
         verify(tagRepository).findByName("travel")
         verify(tagRepository).save(argThat { name == "travel" })
+    }
+
+    // Tag filtering tests
+    @Test
+    fun `GIVEN existing tag WHEN GET filter by tag THEN only posts with that tag are shown`() {
+        val kotlinTag = Tag(id = 1L, name = "kotlin")
+        val javaTag = Tag(id = 2L, name = "java")
+        
+        val post1 = BlogPost(id = 1L, title = "Kotlin Post 1", content = "Content 1", author = "Alice")
+        val post2 = BlogPost(id = 2L, title = "Kotlin Post 2", content = "Content 2", author = "Bob")
+        val post3 = BlogPost(id = 3L, title = "Java Post", content = "Content 3", author = "Charlie")
+        
+        // Posts 1 and 2 have kotlin tag
+        post1.tags.add(kotlinTag)
+        post2.tags.add(kotlinTag)
+        kotlinTag.posts.add(post1)
+        kotlinTag.posts.add(post2)
+        
+        // Post 3 has java tag (different tag)
+        post3.tags.add(javaTag)
+        javaTag.posts.add(post3)
+
+        whenever(tagRepository.findByName("kotlin")).thenReturn(Optional.of(kotlinTag))
+
+        mockMvc
+            .perform(get("/tag/kotlin"))
+            .andExpect(status().isOk)
+            .andExpect(view().name("index"))
+            .andExpect(model().attributeExists("posts"))
+            .andExpect(model().attribute("filterTag", "kotlin"))
+            .andExpect(content().string(containsString("Kotlin Post 1")))
+            .andExpect(content().string(containsString("Kotlin Post 2")))
+            .andExpect(content().string(not(containsString("Java Post"))))
+    }
+
+    @Test
+    fun `GIVEN non-existent tag WHEN GET filter by tag THEN exception is thrown`() {
+        whenever(tagRepository.findByName("nonexistent")).thenReturn(Optional.empty())
+
+        try {
+            mockMvc.perform(get("/tag/nonexistent"))
+            assert(false) { "Expected exception to be thrown" }
+        } catch (e: Exception) {
+            // Expected - tag not found should throw exception
+            assert(e.cause is NoSuchElementException)
+        }
     }
 }
