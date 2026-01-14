@@ -18,10 +18,18 @@
     <main>
       <h1>Create Post</h1>
       <form th:action="@{/create}" method="post">
-        <input type="text" name="title" placeholder="Title" required />
-        <input type="text" name="author" placeholder="Author" required />
-        <textarea name="content" placeholder="Content" required></textarea>
-        <input type="text" name="tags" placeholder="Add Tags (comma-separated, e.g., Food, Travel)" />
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" placeholder="Title" required />
+        
+        <label for="author">Author</label>
+        <input type="text" id="author" name="author" placeholder="Author" required />
+        
+        <label for="content">Content</label>
+        <textarea id="content" name="content" placeholder="Content" required></textarea>
+        
+        <label for="tags">Tags (optional)</label>
+        <input type="text" id="tags" name="tags" placeholder="Add Tags (comma-separated, e.g., Food, Travel)" />
+        
         <button type="submit">Create</button>
       </form>
     </main>
