@@ -72,8 +72,8 @@ main {
   background-color: #777;
 }
 
-/* List styling */
-ul {
+/* Post list styling */
+main ul {
   list-style: none;
   padding: 0;
   display: grid;
@@ -81,23 +81,37 @@ ul {
   grid-gap: 20px;
 }
 
-li {
+main li {
   background-color: #fff;
   border: 1px solid #ccc;
-  padding: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-li:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+main li:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.post-card-link {
+  padding: 20px;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.post-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 10px 0;
 }
 
 .post-meta {
   flex-grow: 1;
-  margin-top: -20px;
+  margin-top: 5px;
   font: italic 14px/1.4 Georgia, serif;
   background-color: #f5f5f5;
 }
@@ -177,6 +191,59 @@ button[type="submit"].danger {
 button[type="submit"].danger:hover {
   background-color: #a13b45;
 }
+
+/* Tag Styles */
+.tag {
+  display: inline-block;
+  padding: 4px 12px;
+  margin: 2px 4px 2px 0;
+  background-color: #e6d9f5;
+  color: #5a3d7a;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* Tag hover effect only on home page */
+main ul .tag {
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+main ul .tag:hover {
+  background-color: #d4c1ed;
+  transform: translateY(-1px);
+}
+
+.tags-container {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.post-actions {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.post-actions a {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #822e81;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.post-actions a:hover {
+  background-color: #5a1f59;
+}
+
 
 /* Responsive Styles */
 

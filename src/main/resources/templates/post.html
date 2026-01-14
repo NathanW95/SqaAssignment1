@@ -21,16 +21,16 @@
         By <span th:text="${post.author}">Author</span>
         (Posted on <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">date</span>)
       </p>
-      <p class="post-content" th:text="${post.content}"></p>
-
-      <div class="tags" th:if="${!post.tags.isEmpty()}">
-        <strong>Tags:</strong>
-        <span th:each="tag, iterStat : ${post.tags}" class="tag">
-          <span th:text="${tag.name}"></span><span th:if="${!iterStat.last}"> </span>
+      <p class="post-content" th:text="${post.content}">Content</p>
+      <div class="tags-container" th:if="${!post.tags.isEmpty()}">
+        <span th:each="tag : ${post.tags}">
+          <span class="tag" th:text="${tag.name}">tag</span>
         </span>
       </div>
 
-      <a th:href="@{'/edit/' + ${post.id}}">Edit Post</a>
+      <div class="post-actions">
+        <a th:href="@{'/edit/' + ${post.id}}">Edit Post</a>
+      </div>
     </main>
   </body>
 </html>

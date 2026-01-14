@@ -19,12 +19,15 @@
       <h1>Blog Posts</h1>
       <ul>
         <li th:each="post : ${posts}">
-          <a th:href="@{'/post/' + ${post.id}}" th:text="${post}"></a>
-          <div class="tags" th:if="${!post.tags.isEmpty()}">
-            <span th:each="tag, iterStat : ${post.tags}" class="tag">
-              <span th:text="${tag.name}"></span><span th:if="${!iterStat.last}"> </span>
-            </span>
-          </div>
+          <a th:href="@{'/post/' + ${post.id}}" class="post-card-link">
+            <h2 class="post-title" th:text="${post.title}">Title</h2>
+            <p class="post-meta">By <span th:text="${post.author}">Author</span> on <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">Date</span></p>
+            <div class="tags-container" th:if="${!post.tags.isEmpty()}">
+              <span th:each="tag : ${post.tags}">
+                <span class="tag" th:text="${tag.name}">tag</span>
+              </span>
+            </div>
+          </a>
         </li>
       </ul>
     </main>
