@@ -37,13 +37,14 @@ class BlogController(
         if (!tags.isNullOrBlank()) {
             val tagNames = tags.split(",").map { it.trim().lowercase() }.filter { it.isNotEmpty() }
             tagNames.forEach { tagName ->
-                val tag = tagRepository.findByName(tagName).orElseGet {
-                    tagRepository.save(Tag(name = tagName))
-                }
+                val tag =
+                    tagRepository.findByName(tagName).orElseGet {
+                        tagRepository.save(Tag(name = tagName))
+                    }
                 post.tags.add(tag)
             }
         }
-        
+
         repository.save(post)
         return "redirect:/"
     }
@@ -87,14 +88,14 @@ class BlogController(
         if (!tags.isNullOrBlank()) {
             val tagNames = tags.split(",").map { it.trim().lowercase() }.filter { it.isNotEmpty() }
             tagNames.forEach { tagName ->
-                val tag = tagRepository.findByName(tagName).orElseGet {
-                    tagRepository.save(Tag(name = tagName))
-                }
+                val tag =
+                    tagRepository.findByName(tagName).orElseGet {
+                        tagRepository.save(Tag(name = tagName))
+                    }
                 post.tags.add(tag)
             }
         }
 
-        
         repository.save(post)
         return "redirect:/post/$postId"
     }

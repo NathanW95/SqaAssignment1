@@ -203,7 +203,7 @@ class BlogControllerTest {
     fun `GIVEN valid form with tags WHEN POST create THEN post is saved with tags`() {
         val tag1 = Tag(id = 1L, name = "kotlin")
         val tag2 = Tag(id = 2L, name = "spring")
-        
+
         whenever(tagRepository.findByName("kotlin")).thenReturn(Optional.of(tag1))
         whenever(tagRepository.findByName("spring")).thenReturn(Optional.of(tag2))
 
@@ -218,13 +218,13 @@ class BlogControllerTest {
             .andExpect(redirectedUrl("/"))
 
         verify(repository).save(
-            argThat { 
-                title == "New Post" && 
-                content == "Body" && 
-                author == "Bob" &&
-                tags.size == 2 &&
-                tags.any { it.name == "kotlin" } &&
-                tags.any { it.name == "spring" }
+            argThat {
+                title == "New Post" &&
+                    content == "Body" &&
+                    author == "Bob" &&
+                    tags.size == 2 &&
+                    tags.any { it.name == "kotlin" } &&
+                    tags.any { it.name == "spring" }
             },
         )
     }
@@ -246,9 +246,9 @@ class BlogControllerTest {
             .andExpect(redirectedUrl("/"))
 
         verify(repository).save(
-            argThat { 
+            argThat {
                 tags.size == 1 &&
-                tags.first().name == "travel"
+                    tags.first().name == "travel"
             },
         )
     }
@@ -274,7 +274,7 @@ class BlogControllerTest {
     fun `GIVEN existing post WHEN POST edit with tags THEN tags are updated`() {
         val post = BlogPost(id = 1L, title = "Old", content = "Old content", author = "Alice")
         val tag = Tag(id = 1L, name = "food")
-        
+
         whenever(repository.findById(1L)).thenReturn(Optional.of(post))
         whenever(tagRepository.findByName("food")).thenReturn(Optional.of(tag))
 
@@ -288,12 +288,12 @@ class BlogControllerTest {
             .andExpect(redirectedUrl("/post/1"))
 
         verify(repository).save(
-            argThat { 
-                id == 1L && 
-                title == "New" && 
-                content == "New content" &&
-                tags.size == 1 &&
-                tags.first().name == "food"
+            argThat {
+                id == 1L &&
+                    title == "New" &&
+                    content == "New content" &&
+                    tags.size == 1 &&
+                    tags.first().name == "food"
             },
         )
     }
@@ -302,7 +302,7 @@ class BlogControllerTest {
     fun `GIVEN existing post WHEN POST edit with new tags THEN new tags are created`() {
         val post = BlogPost(id = 1L, title = "Old", content = "Old content", author = "Alice")
         val newTag = Tag(id = 2L, name = "travel")
-        
+
         whenever(repository.findById(1L)).thenReturn(Optional.of(post))
         whenever(tagRepository.findByName("travel")).thenReturn(Optional.empty())
         whenever(tagRepository.save(argThat { name == "travel" })).thenReturn(newTag)
@@ -317,10 +317,10 @@ class BlogControllerTest {
             .andExpect(redirectedUrl("/post/1"))
 
         verify(repository).save(
-            argThat { 
-                id == 1L && 
-                tags.size == 1 &&
-                tags.first().name == "travel"
+            argThat {
+                id == 1L &&
+                    tags.size == 1 &&
+                    tags.first().name == "travel"
             },
         )
     }
@@ -342,9 +342,9 @@ class BlogControllerTest {
             .andExpect(redirectedUrl("/"))
 
         verify(repository).save(
-            argThat { 
+            argThat {
                 tags.size == 1 &&
-                tags.first().name == "kotlin"
+                    tags.first().name == "kotlin"
             },
         )
     }
@@ -365,9 +365,9 @@ class BlogControllerTest {
             .andExpect(redirectedUrl("/"))
 
         verify(repository).save(
-            argThat { 
+            argThat {
                 tags.size == 1 &&
-                tags.first().name == "food"
+                    tags.first().name == "food"
             },
         )
     }
