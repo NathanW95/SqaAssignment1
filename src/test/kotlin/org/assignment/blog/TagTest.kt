@@ -6,33 +6,45 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class TagTest {
+    companion object {
+        const val TRAVEL = "travel"
+
+        fun createTag(name: String = TRAVEL) = Tag(name = name)
+
+        fun createPost(
+            title: String = "Test Post",
+            content: String = "Content",
+            author: String = "Alice",
+        ) = BlogPost(title = title, content = content, author = author)
+    }
+
     // Entity initialization tests
     @Test
     fun `GIVEN new tag WHEN created THEN id is null by default`() {
-        val tag = Tag(name = "Travel")
+        val tag = createTag()
         assertNull(tag.id)
     }
 
     @Test
     fun `GIVEN new tag WHEN created THEN posts set is empty`() {
-        val tag = Tag(name = "Travel")
+        val tag = createTag()
         assertTrue(tag.posts.isEmpty())
     }
 
     // Entity behavior tests
     @Test
     fun `GIVEN tag WHEN toString called THEN returns name`() {
-        val tag = Tag(name = "Travel")
+        val tag = createTag()
         val result = tag.toString()
 
-        assertEquals("Travel", result)
+        assertEquals(TRAVEL, result)
     }
 
     // Relationship management tests
     @Test
     fun `GIVEN tag and post WHEN post added to tag THEN posts contains post`() {
-        val tag = Tag(name = "Travel")
-        val post = BlogPost(title = "Test Post", content = "Content", author = "Alice")
+        val tag = createTag()
+        val post = createPost()
 
         tag.posts.add(post)
 
@@ -42,8 +54,8 @@ class TagTest {
 
     @Test
     fun `GIVEN tag with post WHEN post removed THEN posts is empty`() {
-        val tag = Tag(name = "Travel")
-        val post = BlogPost(title = "Test Post", content = "Content", author = "Alice")
+        val tag = createTag()
+        val post = createPost()
         tag.posts.add(post)
 
         tag.posts.remove(post)

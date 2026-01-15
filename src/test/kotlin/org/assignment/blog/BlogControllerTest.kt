@@ -30,16 +30,27 @@ class BlogControllerTest {
     @MockitoBean
     lateinit var tagRepository: TagRepository
 
+    companion object {
+        const val TRAVEL = "travel"
+        const val FOOD = "food"
+
+        fun createPost(
+            id: Long = 1L,
+            title: String = "Test Post",
+            content: String = "Test Content",
+            author: String = "Alice",
+        ) = BlogPost(id = id, title = title, content = content, author = author)
+
+        fun createTag(
+            id: Long = 1L,
+            name: String = TRAVEL,
+        ) = Tag(id = id, name = name)
+    }
+
     // Index/List view tests
     @Test
     fun `GIVEN existing posts WHEN GET index THEN list is shown`() {
-        val post =
-            BlogPost(
-                id = 1L,
-                title = "Hello",
-                content = "Content",
-                author = "Alice",
-            )
+        val post = createPost(title = "Hello", content = "Content")
         whenever(repository.findAll()).thenReturn(listOf(post))
 
         mockMvc
@@ -79,13 +90,7 @@ class BlogControllerTest {
     // View single post tests
     @Test
     fun `GIVEN existing post WHEN GET post THEN post page is shown`() {
-        val post =
-            BlogPost(
-                id = 1L,
-                title = "Title",
-                content = "Body",
-                author = "Alice",
-            )
+        val post = createPost(title = "Title", content = "Body")
         whenever(repository.findById(1L)).thenReturn(Optional.of(post))
 
         mockMvc
@@ -396,34 +401,34 @@ class BlogControllerTest {
     // Tag filtering tests
     @Test
     fun `GIVEN existing tag WHEN GET filter by tag THEN only posts with that tag are shown`() {
-        val kotlinTag = Tag(id = 1L, name = "kotlin")
-        val javaTag = Tag(id = 2L, name = "java")
+        val travelTag = createTag(id = 1L, name = TRAVEL)
+        val foodTag = createTag(id = 2L, name = FOOD)
 
-        val post1 = BlogPost(id = 1L, title = "Kotlin Post 1", content = "Content 1", author = "Alice")
-        val post2 = BlogPost(id = 2L, title = "Kotlin Post 2", content = "Content 2", author = "Bob")
-        val post3 = BlogPost(id = 3L, title = "Java Post", content = "Content 3", author = "Charlie")
+        val post1 = createPost(id = 1L, title = "Travel Post 1", content = "Content 1")
+        val post2 = createPost(id = 2L, title = "Travel Post 2", content = "Content 2", author = "Bob")
+        val post3 = createPost(id = 3L, title = "Food Post", content = "Content 3", author = "Charlie")
 
-        // Posts 1 and 2 have kotlin tag
-        post1.tags.add(kotlinTag)
-        post2.tags.add(kotlinTag)
-        kotlinTag.posts.add(post1)
-        kotlinTag.posts.add(post2)
+        // Posts 1 and 2 have travel tag
+        post1.tags.add(travelTag)
+        post2.tags.add(travelTag)
+        travelTag.posts.add(post1)
+        travelTag.posts.add(post2)
 
-        // Post 3 has java tag (different tag)
-        post3.tags.add(javaTag)
-        javaTag.posts.add(post3)
+        // Post 3 has food tag (different tag)
+        post3.tags.add(foodTag)
+        foodTag.posts.add(post3)
 
-        whenever(tagRepository.findByName("kotlin")).thenReturn(Optional.of(kotlinTag))
+        whenever(tagRepository.findByName(TRAVEL)).thenReturn(Optional.of(travelTag))
 
         mockMvc
-            .perform(get("/tag/kotlin"))
+            .perform(get("/tag/$TRAVEL"))
             .andExpect(status().isOk)
             .andExpect(view().name("index"))
             .andExpect(model().attributeExists("posts"))
-            .andExpect(model().attribute("filterTag", "kotlin"))
-            .andExpect(content().string(containsString("Kotlin Post 1")))
-            .andExpect(content().string(containsString("Kotlin Post 2")))
-            .andExpect(content().string(not(containsString("Java Post"))))
+            .andExpect(model().attribute("filterTag", TRAVEL))
+            .andExpect(content().string(containsString("Travel Post 1")))
+            .andExpect(content().string(containsString("Travel Post 2")))
+            .andExpect(content().string(not(containsString("Food Post"))))
     }
 
     @Test

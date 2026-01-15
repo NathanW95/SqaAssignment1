@@ -15,10 +15,25 @@ class BlogPostTagRelationshipTest {
     @Autowired
     lateinit var tagRepository: TagRepository
 
+    companion object {
+        const val FOOD = "food"
+        const val TRAVEL = "travel"
+        const val LIFESTYLE = "lifestyle"
+        const val TECH = "tech"
+
+        fun createPost(
+            title: String = "Test Post",
+            content: String = "Content",
+            author: String = "Alice",
+        ) = BlogPost(title = title, content = content, author = author)
+
+        fun createTag(name: String = TRAVEL) = Tag(name = name)
+    }
+
     // Simple edge cases - entities without relationships
     @Test
     fun `GIVEN post without tags WHEN post deleted THEN succeeds`() {
-        val post = BlogPost(title = "Test", content = "Content", author = "Alice")
+        val post = createPost()
         val savedPost = blogPostRepository.save(post)
 
         savedPost.id?.let { blogPostRepository.deleteById(it) }
@@ -29,7 +44,7 @@ class BlogPostTagRelationshipTest {
 
     @Test
     fun `GIVEN tag without posts WHEN tag deleted THEN succeeds`() {
-        val tag = tagRepository.save(Tag(name = "Orphan"))
+        val tag = tagRepository.save(createTag(name = LIFESTYLE))
 
         tag.id?.let { tagRepository.deleteById(it) }
         tagRepository.flush()
@@ -40,10 +55,10 @@ class BlogPostTagRelationshipTest {
     // Basic relationship operations
     @Test
     fun `GIVEN post with tags WHEN post deleted THEN tags remain in database`() {
-        val tag1 = tagRepository.save(Tag(name = "Kotlin"))
-        val tag2 = tagRepository.save(Tag(name = "Spring"))
+        val tag1 = tagRepository.save(createTag(name = FOOD))
+        val tag2 = tagRepository.save(createTag(name = TRAVEL))
 
-        val post = BlogPost(title = "Test", content = "Content", author = "Alice")
+        val post = createPost()
         post.tags.add(tag1)
         post.tags.add(tag2)
         val savedPost = blogPostRepository.save(post)
@@ -57,9 +72,9 @@ class BlogPostTagRelationshipTest {
 
     @Test
     fun `GIVEN post with tags WHEN post deleted THEN join table entries removed`() {
-        val tag = tagRepository.save(Tag(name = "Java"))
+        val tag = tagRepository.save(createTag(name = TECH))
 
-        val post = BlogPost(title = "Test", content = "Content", author = "Alice")
+        val post = createPost()
         post.tags.add(tag)
         val savedPost = blogPostRepository.save(post)
 
@@ -73,10 +88,10 @@ class BlogPostTagRelationshipTest {
     // Modifying relationships
     @Test
     fun `GIVEN post with multiple tags WHEN one tag removed THEN other tags remain`() {
-        val tag1 = tagRepository.save(Tag(name = "Backend"))
-        val tag2 = tagRepository.save(Tag(name = "Frontend"))
+        val tag1 = tagRepository.save(createTag(name = FOOD))
+        val tag2 = tagRepository.save(createTag(name = LIFESTYLE))
 
-        val post = BlogPost(title = "Test", content = "Content", author = "Alice")
+        val post = createPost()
         post.tags.add(tag1)
         post.tags.add(tag2)
         val savedPost = blogPostRepository.save(post)
@@ -95,10 +110,10 @@ class BlogPostTagRelationshipTest {
     @Test
     fun `GIVEN post with unsaved tags WHEN post saved THEN tags are also saved`() {
         // UNSAVED tags (not calling tagRepository.save)
-        val tag1 = Tag(name = "NewTag1")
-        val tag2 = Tag(name = "NewTag2")
+        val tag1 = createTag(name = FOOD)
+        val tag2 = createTag(name = TRAVEL)
 
-        val post = BlogPost(title = "Test", content = "Content", author = "Alice")
+        val post = createPost()
         post.tags.add(tag1)
         post.tags.add(tag2)
 
@@ -112,9 +127,9 @@ class BlogPostTagRelationshipTest {
     // Complex workflow - proper tag deletion
     @Test
     fun `GIVEN tag removed from all posts WHEN tag deleted THEN succeeds`() {
-        val tag = tagRepository.save(Tag(name = "Python"))
+        val tag = tagRepository.save(createTag(name = TECH))
 
-        val post = BlogPost(title = "Test", content = "Content", author = "Alice")
+        val post = createPost()
         post.tags.add(tag)
         val savedPost = blogPostRepository.save(post)
 
@@ -134,7 +149,4 @@ class BlogPostTagRelationshipTest {
         val retrievedPost = blogPostRepository.findById(savedPost.id!!).get()
         assertTrue(retrievedPost.tags.isEmpty())
     }
-
-    // TODO: if adding Optional tag management feature... Add controller test to verify tags cannot be deleted when associated with posts
-    // Controller would check: if (tag.posts.isNotEmpty()) throw IllegalStateException(...)
 }
