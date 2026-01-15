@@ -33,18 +33,7 @@ class BlogController(
         @RequestParam(required = false) tags: String?,
     ): String {
         val post = BlogPost(title = title, content = content, author = author)
-
-        if (!tags.isNullOrBlank()) {
-            val tagNames = tags.split(",").map { it.trim().lowercase() }.filter { it.isNotEmpty() }
-            tagNames.forEach { tagName ->
-                val tag =
-                    tagRepository.findByName(tagName).orElseGet {
-                        tagRepository.save(Tag(name = tagName))
-                    }
-                post.tags.add(tag)
-            }
-        }
-
+        processAndAssociateTags(post, tags)
         repository.save(post)
         return "redirect:/"
     }
@@ -54,7 +43,7 @@ class BlogController(
         @PathVariable("postId") postId: Long,
         model: Model,
     ): String {
-        val post = repository.findById(postId).orElseThrow()
+        val post = getPostOrThrow(postId)
         model.addAttribute("title", post.title)
         model.addAttribute("post", post)
         return "post"
@@ -65,7 +54,7 @@ class BlogController(
         @PathVariable("postId") postId: Long,
         model: Model,
     ): String {
-        val post = repository.findById(postId).orElseThrow()
+        val post = getPostOrThrow(postId)
         val tagString = post.tags.joinToString(", ") { it.name }
         model.addAttribute("title", "Edit Post")
         model.addAttribute("post", post)
@@ -80,22 +69,11 @@ class BlogController(
         @RequestParam content: String,
         @RequestParam(required = false) tags: String?,
     ): String {
-        val post = repository.findById(postId).orElseThrow()
+        val post = getPostOrThrow(postId)
         post.title = title
         post.content = content
-
         post.tags.clear()
-        if (!tags.isNullOrBlank()) {
-            val tagNames = tags.split(",").map { it.trim().lowercase() }.filter { it.isNotEmpty() }
-            tagNames.forEach { tagName ->
-                val tag =
-                    tagRepository.findByName(tagName).orElseGet {
-                        tagRepository.save(Tag(name = tagName))
-                    }
-                post.tags.add(tag)
-            }
-        }
-
+        processAndAssociateTags(post, tags)
         repository.save(post)
         return "redirect:/post/$postId"
     }
@@ -157,4 +135,33 @@ class BlogController(
         model.addAttribute("totalLength", total)
         return "stats"
     }
+
+    private fun processAndAssociateTags(
+        post: BlogPost,
+        tagsString: String?,
+    ) {
+        if (tagsString.isNullOrBlank()) return
+
+        val tagNames = parseTagNames(tagsString)
+        tagNames.forEach { tagName ->
+            val tag = findOrCreateTag(tagName)
+            post.tags.add(tag)
+        }
+    }
+
+    private fun parseTagNames(tagsString: String): List<String> =
+        tagsString
+            .split(",")
+            .map { it.trim().lowercase() }
+            .filter { it.isNotEmpty() }
+
+    private fun findOrCreateTag(tagName: String): Tag =
+        tagRepository.findByName(tagName).orElseGet {
+            tagRepository.save(Tag(name = tagName))
+        }
+
+    private fun getPostOrThrow(postId: Long): BlogPost =
+        repository.findById(postId).orElseThrow {
+            NoSuchElementException("Post not found: $postId")
+        }
 }
