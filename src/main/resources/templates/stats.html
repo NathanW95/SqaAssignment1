@@ -17,12 +17,37 @@
     </header>
     <main>
       <h1>Post Statistics</h1>
+      
+      <h2>Post Length Statistics</h2>
       <p>Average: <span th:text="${averageLength}">0</span> characters</p>
       <p>Median: <span th:text="${medianLength}">0</span> characters</p>
       <p>Maximum: <span th:text="${maxLength}">0</span> characters</p>
       <p>Minimum: <span th:text="${minLength}">0</span> characters</p>
       <br />
       <p>Total length of all posts: <span th:text="${totalLength}">0</span> characters</p>
+      
+      <h2>Tag Statistics</h2>
+      <div th:if="${tagStatistics.isEmpty()}">
+        <p>No tags found.</p>
+      </div>
+      <div th:unless="${tagStatistics.isEmpty()}">
+        <table>
+          <thead>
+            <tr>
+              <th>Tag</th>
+              <th>Number of Posts</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="stat : ${tagStatistics}">
+              <td>
+                <a th:href="@{/tag/{tagName}(tagName=${stat.first})}" th:text="${stat.first}">tag</a>
+              </td>
+              <td th:text="${stat.second}">0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </main>
   </body>
 </html>

@@ -96,12 +96,14 @@ class BlogController(
     @GetMapping("/stats")
     fun stats(model: Model): String {
         val statistics = blogPostService.getPostStatistics()
+        val tagStatistics = tagService.getTagStatistics()
         model.addAttribute("title", "Post Statistics")
         model.addAttribute("averageLength", String.format("%.2f", statistics["average"]).toDouble())
         model.addAttribute("medianLength", String.format("%.2f", statistics["median"]).toDouble())
         model.addAttribute("maxLength", statistics["max"])
         model.addAttribute("minLength", statistics["min"])
         model.addAttribute("totalLength", statistics["total"])
+        model.addAttribute("tagStatistics", tagStatistics)
         return "stats"
     }
 }

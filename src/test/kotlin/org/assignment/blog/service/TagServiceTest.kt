@@ -25,6 +25,7 @@ class TagServiceTest {
     companion object {
         const val FOOD = "food"
         const val TRAVEL = "travel"
+        const val LIFESTYLE = "lifestyle"
 
         fun createTag(
             id: Long = 1L,
@@ -194,5 +195,71 @@ class TagServiceTest {
             }
 
         Assertions.assertEquals("Tag not found: nonexistent", exception.message)
+    }
+
+    // getTagStatistics tests
+    @Test
+    fun `GIVEN no tags WHEN getTagStatistics THEN returns empty list`() {
+        whenever(tagRepository.findAll()).thenReturn(emptyList())
+
+        val result = tagService.getTagStatistics()
+
+        Assertions.assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun `GIVEN tags with posts WHEN getTagStatistics THEN returns tags with post counts`() {
+        val foodTag = createTag(id = 1L, name = FOOD)
+        val travelTag = createTag(id = 2L, name = TRAVEL)
+        val post1 = createPost(id = 1L)
+        val post2 = createPost(id = 2L)
+        val post3 = createPost(id = 3L)
+
+        foodTag.posts.add(post1)
+        foodTag.posts.add(post2)
+        travelTag.posts.add(post3)
+
+        whenever(tagRepository.findAll()).thenReturn(listOf(foodTag, travelTag))
+
+        val result = tagService.getTagStatistics()
+
+        Assertions.assertEquals(2, result.size)
+        Assertions.assertEquals(FOOD to 2, result[0])
+        Assertions.assertEquals(TRAVEL to 1, result[1])
+    }
+
+    @Test
+    fun `GIVEN tags WHEN getTagStatistics THEN returns sorted by post count descending`() {
+        val foodTag = createTag(id = 1L, name = FOOD)
+        val travelTag = createTag(id = 2L, name = TRAVEL)
+        val kotlinTag = createTag(id = 3L, name = LIFESTYLE)
+
+        foodTag.posts.add(createPost(id = 1L))
+        travelTag.posts.add(createPost(id = 2L))
+        travelTag.posts.add(createPost(id = 3L))
+        travelTag.posts.add(createPost(id = 4L))
+        kotlinTag.posts.add(createPost(id = 5L))
+        kotlinTag.posts.add(createPost(id = 6L))
+
+        whenever(tagRepository.findAll()).thenReturn(listOf(foodTag, travelTag, kotlinTag))
+
+        val result = tagService.getTagStatistics()
+
+        Assertions.assertEquals(3, result.size)
+        Assertions.assertEquals(TRAVEL to 3, result[0])
+        Assertions.assertEquals(LIFESTYLE to 2, result[1])
+        Assertions.assertEquals(FOOD to 1, result[2])
+    }
+
+    @Test
+    fun `GIVEN tag with no posts WHEN getTagStatistics THEN returns tag with zero count`() {
+        val emptyTag = createTag(id = 1L, name = FOOD)
+
+        whenever(tagRepository.findAll()).thenReturn(listOf(emptyTag))
+
+        val result = tagService.getTagStatistics()
+
+        Assertions.assertEquals(1, result.size)
+        Assertions.assertEquals(FOOD to 0, result[0])
     }
 }

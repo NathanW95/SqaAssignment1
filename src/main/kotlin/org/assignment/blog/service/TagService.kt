@@ -40,4 +40,10 @@ class TagService(
             }
         return tag.posts.toList()
     }
+
+    fun getTagStatistics(): List<Pair<String, Int>> =
+        tagRepository
+            .findAll()
+            .map { tag -> tag.name to tag.posts.size }
+            .sortedByDescending { it.second }
 }
