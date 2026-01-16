@@ -1,5 +1,6 @@
-package org.assignment.blog
+package org.assignment.blog.repository
 
+import org.assignment.blog.model.BlogPost
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 

@@ -1,8 +1,6 @@
-package org.assignment.blog
+package org.assignment.blog.model
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class TagTest {
@@ -22,13 +20,13 @@ class TagTest {
     @Test
     fun `GIVEN new tag WHEN created THEN id is null by default`() {
         val tag = createTag()
-        assertNull(tag.id)
+        Assertions.assertNull(tag.id)
     }
 
     @Test
     fun `GIVEN new tag WHEN created THEN posts set is empty`() {
         val tag = createTag()
-        assertTrue(tag.posts.isEmpty())
+        Assertions.assertTrue(tag.posts.isEmpty())
     }
 
     // Entity behavior tests
@@ -37,7 +35,7 @@ class TagTest {
         val tag = createTag()
         val result = tag.toString()
 
-        assertEquals(TRAVEL, result)
+        Assertions.assertEquals(TRAVEL, result)
     }
 
     // Relationship management tests
@@ -48,8 +46,8 @@ class TagTest {
 
         tag.posts.add(post)
 
-        assertTrue(tag.posts.contains(post))
-        assertEquals(1, tag.posts.size)
+        Assertions.assertTrue(tag.posts.contains(post))
+        Assertions.assertEquals(1, tag.posts.size)
     }
 
     @Test
@@ -60,6 +58,6 @@ class TagTest {
 
         tag.posts.remove(post)
 
-        assertTrue(tag.posts.isEmpty())
+        Assertions.assertTrue(tag.posts.isEmpty())
     }
 }

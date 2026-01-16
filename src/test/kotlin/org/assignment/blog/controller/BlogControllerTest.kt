@@ -1,6 +1,9 @@
-package org.assignment.blog
+package org.assignment.blog.controller
 
-import org.hamcrest.Matchers.containsString
+import org.assignment.blog.model.BlogPost
+import org.assignment.blog.service.BlogPostService
+import org.assignment.blog.service.TagService
+import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -8,13 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.model
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 @WebMvcTest(BlogController::class)
 class BlogControllerTest {
@@ -47,33 +45,34 @@ class BlogControllerTest {
         whenever(blogPostService.getAllPosts()).thenReturn(listOf(post))
 
         mockMvc
-            .perform(get("/"))
-            .andExpect(status().isOk)
-            .andExpect(view().name("index"))
-            .andExpect(model().attributeExists("posts"))
-            .andExpect(content().string(containsString("Hello")))
+            .perform(MockMvcRequestBuilders.get("/"))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.view().name("index"))
+            .andExpect(MockMvcResultMatchers.model().attributeExists("posts"))
+            .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("Hello")))
     }
 
     // Create post tests
     @Test
     fun `WHEN GET create THEN create view is returned`() {
         mockMvc
-            .perform(get("/create"))
-            .andExpect(status().isOk)
-            .andExpect(view().name("create"))
-            .andExpect(model().attribute("title", "Create Post"))
+            .perform(MockMvcRequestBuilders.get("/create"))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.view().name("create"))
+            .andExpect(MockMvcResultMatchers.model().attribute("title", "Create Post"))
     }
 
     @Test
     fun `GIVEN valid form WHEN POST create THEN post is saved and redirected`() {
         mockMvc
             .perform(
-                post("/create")
+                MockMvcRequestBuilders
+                    .post("/create")
                     .param("title", "New Post")
                     .param("content", "New Content")
                     .param("author", "Alice"),
-            ).andExpect(status().is3xxRedirection)
-            .andExpect(redirectedUrl("/"))
+            ).andExpect(MockMvcResultMatchers.status().is3xxRedirection)
+            .andExpect(MockMvcResultMatchers.redirectedUrl("/"))
 
         verify(blogPostService).createPost("New Post", "New Content", "Alice", null)
     }
@@ -85,12 +84,12 @@ class BlogControllerTest {
         whenever(blogPostService.getPostById(1L)).thenReturn(post)
 
         mockMvc
-            .perform(get("/post/1"))
-            .andExpect(status().isOk)
-            .andExpect(view().name("post"))
-            .andExpect(model().attribute("post", post))
-            .andExpect(content().string(containsString("Title")))
-            .andExpect(content().string(containsString("Body")))
+            .perform(MockMvcRequestBuilders.get("/post/1"))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.view().name("post"))
+            .andExpect(MockMvcResultMatchers.model().attribute("post", post))
+            .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("Title")))
+            .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("Body")))
     }
 
     @Test
@@ -99,7 +98,7 @@ class BlogControllerTest {
             .thenThrow(NoSuchElementException("Post not found: 999"))
 
         try {
-            mockMvc.perform(get("/post/999"))
+            mockMvc.perform(MockMvcRequestBuilders.get("/post/999"))
             assert(false) { "Expected exception to be thrown" }
         } catch (e: Exception) {
             assert(e.cause is NoSuchElementException)
@@ -114,10 +113,10 @@ class BlogControllerTest {
         whenever(blogPostService.getTagString(post)).thenReturn("")
 
         mockMvc
-            .perform(get("/edit/1"))
-            .andExpect(status().isOk)
-            .andExpect(view().name("edit"))
-            .andExpect(model().attribute("post", post))
+            .perform(MockMvcRequestBuilders.get("/edit/1"))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.view().name("edit"))
+            .andExpect(MockMvcResultMatchers.model().attribute("post", post))
     }
 
     @Test
@@ -126,7 +125,7 @@ class BlogControllerTest {
             .thenThrow(NoSuchElementException("Post not found: 999"))
 
         try {
-            mockMvc.perform(get("/edit/999"))
+            mockMvc.perform(MockMvcRequestBuilders.get("/edit/999"))
             assert(false) { "Expected exception to be thrown" }
         } catch (e: Exception) {
             assert(e.cause is NoSuchElementException)
@@ -137,11 +136,12 @@ class BlogControllerTest {
     fun `GIVEN existing post WHEN POST edit THEN post is updated and redirected`() {
         mockMvc
             .perform(
-                post("/edit/1")
+                MockMvcRequestBuilders
+                    .post("/edit/1")
                     .param("title", "New")
                     .param("content", "New content"),
-            ).andExpect(status().is3xxRedirection)
-            .andExpect(redirectedUrl("/post/1"))
+            ).andExpect(MockMvcResultMatchers.status().is3xxRedirection)
+            .andExpect(MockMvcResultMatchers.redirectedUrl("/post/1"))
 
         verify(blogPostService).updatePost(1L, "New", "New content", null)
     }
@@ -150,9 +150,9 @@ class BlogControllerTest {
     @Test
     fun `GIVEN existing post WHEN POST delete THEN post is deleted and redirected`() {
         mockMvc
-            .perform(post("/delete/1"))
-            .andExpect(status().is3xxRedirection)
-            .andExpect(redirectedUrl("/"))
+            .perform(MockMvcRequestBuilders.post("/delete/1"))
+            .andExpect(MockMvcResultMatchers.status().is3xxRedirection)
+            .andExpect(MockMvcResultMatchers.redirectedUrl("/"))
 
         verify(blogPostService).deletePost(1L)
     }
@@ -160,9 +160,9 @@ class BlogControllerTest {
     @Test
     fun `GIVEN non-existent post WHEN POST delete THEN redirects without error`() {
         mockMvc
-            .perform(post("/delete/999"))
-            .andExpect(status().is3xxRedirection)
-            .andExpect(redirectedUrl("/"))
+            .perform(MockMvcRequestBuilders.post("/delete/999"))
+            .andExpect(MockMvcResultMatchers.status().is3xxRedirection)
+            .andExpect(MockMvcResultMatchers.redirectedUrl("/"))
 
         verify(blogPostService).deletePost(999L)
     }
@@ -181,15 +181,15 @@ class BlogControllerTest {
         whenever(blogPostService.getPostStatistics()).thenReturn(stats)
 
         mockMvc
-            .perform(get("/stats"))
-            .andExpect(status().isOk)
-            .andExpect(view().name("stats"))
-            .andExpect(model().attribute("title", "Post Statistics"))
-            .andExpect(model().attribute("averageLength", 7.0))
-            .andExpect(model().attribute("medianLength", 7.0))
-            .andExpect(model().attribute("maxLength", 9))
-            .andExpect(model().attribute("minLength", 5))
-            .andExpect(model().attribute("totalLength", 21))
+            .perform(MockMvcRequestBuilders.get("/stats"))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.view().name("stats"))
+            .andExpect(MockMvcResultMatchers.model().attribute("title", "Post Statistics"))
+            .andExpect(MockMvcResultMatchers.model().attribute("averageLength", 7.0))
+            .andExpect(MockMvcResultMatchers.model().attribute("medianLength", 7.0))
+            .andExpect(MockMvcResultMatchers.model().attribute("maxLength", 9))
+            .andExpect(MockMvcResultMatchers.model().attribute("minLength", 5))
+            .andExpect(MockMvcResultMatchers.model().attribute("totalLength", 21))
     }
 
     @Test
@@ -205,15 +205,15 @@ class BlogControllerTest {
         whenever(blogPostService.getPostStatistics()).thenReturn(stats)
 
         mockMvc
-            .perform(get("/stats"))
-            .andExpect(status().isOk)
-            .andExpect(view().name("stats"))
-            .andExpect(model().attribute("title", "Post Statistics"))
-            .andExpect(model().attribute("averageLength", 0.0))
-            .andExpect(model().attribute("medianLength", 0.0))
-            .andExpect(model().attribute("maxLength", 0))
-            .andExpect(model().attribute("minLength", 0))
-            .andExpect(model().attribute("totalLength", 0))
+            .perform(MockMvcRequestBuilders.get("/stats"))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.view().name("stats"))
+            .andExpect(MockMvcResultMatchers.model().attribute("title", "Post Statistics"))
+            .andExpect(MockMvcResultMatchers.model().attribute("averageLength", 0.0))
+            .andExpect(MockMvcResultMatchers.model().attribute("medianLength", 0.0))
+            .andExpect(MockMvcResultMatchers.model().attribute("maxLength", 0))
+            .andExpect(MockMvcResultMatchers.model().attribute("minLength", 0))
+            .andExpect(MockMvcResultMatchers.model().attribute("totalLength", 0))
     }
 
     @Test
@@ -229,11 +229,11 @@ class BlogControllerTest {
         whenever(blogPostService.getPostStatistics()).thenReturn(stats)
 
         mockMvc
-            .perform(get("/stats"))
-            .andExpect(status().isOk)
-            .andExpect(view().name("stats"))
-            .andExpect(model().attribute("title", "Post Statistics"))
-            .andExpect(model().attribute("medianLength", 5.0))
+            .perform(MockMvcRequestBuilders.get("/stats"))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.view().name("stats"))
+            .andExpect(MockMvcResultMatchers.model().attribute("title", "Post Statistics"))
+            .andExpect(MockMvcResultMatchers.model().attribute("medianLength", 5.0))
     }
 
     // Tag association tests
@@ -241,13 +241,14 @@ class BlogControllerTest {
     fun `GIVEN valid form with tags WHEN POST create THEN post is saved with tags`() {
         mockMvc
             .perform(
-                post("/create")
+                MockMvcRequestBuilders
+                    .post("/create")
                     .param("title", "New Post")
                     .param("content", "Body")
                     .param("author", "Bob")
                     .param("tags", TRAVEL_AND_FOOD),
-            ).andExpect(status().is3xxRedirection)
-            .andExpect(redirectedUrl("/"))
+            ).andExpect(MockMvcResultMatchers.status().is3xxRedirection)
+            .andExpect(MockMvcResultMatchers.redirectedUrl("/"))
 
         verify(blogPostService).createPost("New Post", "Body", "Bob", TRAVEL_AND_FOOD)
     }
@@ -256,13 +257,14 @@ class BlogControllerTest {
     fun `GIVEN form with empty tags WHEN POST create THEN post is saved without tags`() {
         mockMvc
             .perform(
-                post("/create")
+                MockMvcRequestBuilders
+                    .post("/create")
                     .param("title", "Post")
                     .param("content", "Content")
                     .param("author", "Alice")
                     .param("tags", ""),
-            ).andExpect(status().is3xxRedirection)
-            .andExpect(redirectedUrl("/"))
+            ).andExpect(MockMvcResultMatchers.status().is3xxRedirection)
+            .andExpect(MockMvcResultMatchers.redirectedUrl("/"))
 
         verify(blogPostService).createPost("Post", "Content", "Alice", "")
     }
@@ -271,12 +273,13 @@ class BlogControllerTest {
     fun `GIVEN existing post WHEN POST edit with tags THEN delegates to service with tags`() {
         mockMvc
             .perform(
-                post("/edit/1")
+                MockMvcRequestBuilders
+                    .post("/edit/1")
                     .param("title", "New")
                     .param("content", "New content")
                     .param("tags", FOOD),
-            ).andExpect(status().is3xxRedirection)
-            .andExpect(redirectedUrl("/post/1"))
+            ).andExpect(MockMvcResultMatchers.status().is3xxRedirection)
+            .andExpect(MockMvcResultMatchers.redirectedUrl("/post/1"))
 
         verify(blogPostService).updatePost(1L, "New", "New content", FOOD)
     }
@@ -290,13 +293,13 @@ class BlogControllerTest {
         whenever(tagService.getPostsByTag(TRAVEL)).thenReturn(listOf(post1, post2))
 
         mockMvc
-            .perform(get("/tag/$TRAVEL"))
-            .andExpect(status().isOk)
-            .andExpect(view().name("index"))
-            .andExpect(model().attributeExists("posts"))
-            .andExpect(model().attribute("filterTag", TRAVEL))
-            .andExpect(content().string(containsString("Travel Post 1")))
-            .andExpect(content().string(containsString("Travel Post 2")))
+            .perform(MockMvcRequestBuilders.get("/tag/$TRAVEL"))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.view().name("index"))
+            .andExpect(MockMvcResultMatchers.model().attributeExists("posts"))
+            .andExpect(MockMvcResultMatchers.model().attribute("filterTag", TRAVEL))
+            .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("Travel Post 1")))
+            .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("Travel Post 2")))
     }
 
     @Test
@@ -305,7 +308,7 @@ class BlogControllerTest {
             .thenThrow(NoSuchElementException("Tag not found: nonexistent"))
 
         try {
-            mockMvc.perform(get("/tag/nonexistent"))
+            mockMvc.perform(MockMvcRequestBuilders.get("/tag/nonexistent"))
             assert(false) { "Expected exception to be thrown" }
         } catch (e: Exception) {
             // Expected - tag not found should throw exception

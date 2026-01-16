@@ -1,8 +1,10 @@
-package org.assignment.blog
+package org.assignment.blog.integration
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.assignment.blog.model.BlogPost
+import org.assignment.blog.model.Tag
+import org.assignment.blog.repository.BlogPostRepository
+import org.assignment.blog.repository.TagRepository
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest
@@ -39,7 +41,7 @@ class BlogPostTagRelationshipTest {
         savedPost.id?.let { blogPostRepository.deleteById(it) }
         blogPostRepository.flush()
 
-        assertFalse(blogPostRepository.findById(savedPost.id!!).isPresent)
+        Assertions.assertFalse(blogPostRepository.findById(savedPost.id!!).isPresent)
     }
 
     @Test
@@ -49,7 +51,7 @@ class BlogPostTagRelationshipTest {
         tag.id?.let { tagRepository.deleteById(it) }
         tagRepository.flush()
 
-        assertFalse(tagRepository.findById(tag.id!!).isPresent)
+        Assertions.assertFalse(tagRepository.findById(tag.id!!).isPresent)
     }
 
     // Basic relationship operations
@@ -66,8 +68,8 @@ class BlogPostTagRelationshipTest {
         savedPost.id?.let { blogPostRepository.deleteById(it) }
         blogPostRepository.flush()
 
-        assertTrue(tagRepository.findById(tag1.id!!).isPresent)
-        assertTrue(tagRepository.findById(tag2.id!!).isPresent)
+        Assertions.assertTrue(tagRepository.findById(tag1.id!!).isPresent)
+        Assertions.assertTrue(tagRepository.findById(tag2.id!!).isPresent)
     }
 
     @Test
@@ -82,7 +84,7 @@ class BlogPostTagRelationshipTest {
         blogPostRepository.flush()
 
         val retrievedTag = tagRepository.findById(tag.id!!).get()
-        assertFalse(retrievedTag.posts.any { it.id == savedPost.id })
+        Assertions.assertFalse(retrievedTag.posts.any { it.id == savedPost.id })
     }
 
     // Modifying relationships
@@ -101,9 +103,9 @@ class BlogPostTagRelationshipTest {
         blogPostRepository.flush()
 
         val retrievedPost = blogPostRepository.findById(savedPost.id!!).get()
-        assertEquals(1, retrievedPost.tags.size)
-        assertTrue(retrievedPost.tags.any { it.id == tag2.id })
-        assertFalse(retrievedPost.tags.any { it.id == tag1.id })
+        Assertions.assertEquals(1, retrievedPost.tags.size)
+        Assertions.assertTrue(retrievedPost.tags.any { it.id == tag2.id })
+        Assertions.assertFalse(retrievedPost.tags.any { it.id == tag1.id })
     }
 
     // Cascade behavior tests
@@ -120,8 +122,8 @@ class BlogPostTagRelationshipTest {
         blogPostRepository.save(post)
         blogPostRepository.flush()
 
-        assertTrue(tagRepository.findById(tag1.id!!).isPresent)
-        assertTrue(tagRepository.findById(tag2.id!!).isPresent)
+        Assertions.assertTrue(tagRepository.findById(tag1.id!!).isPresent)
+        Assertions.assertTrue(tagRepository.findById(tag2.id!!).isPresent)
     }
 
     // Complex workflow - proper tag deletion
@@ -144,9 +146,9 @@ class BlogPostTagRelationshipTest {
         tagRepository.flush()
 
         // Verify tag is deleted
-        assertFalse(tagRepository.findById(tag.id!!).isPresent)
+        Assertions.assertFalse(tagRepository.findById(tag.id!!).isPresent)
         // Verify post still exists with no tags
         val retrievedPost = blogPostRepository.findById(savedPost.id!!).get()
-        assertTrue(retrievedPost.tags.isEmpty())
+        Assertions.assertTrue(retrievedPost.tags.isEmpty())
     }
 }

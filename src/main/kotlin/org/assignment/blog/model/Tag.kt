@@ -1,4 +1,4 @@
-package org.assignment.blog
+package org.assignment.blog.model
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

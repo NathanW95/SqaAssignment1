@@ -1,10 +1,7 @@
-package org.assignment.blog
+package org.assignment.blog.repository
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.assignment.blog.model.Tag
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest
@@ -30,15 +27,15 @@ class TagRepositoryTest {
         val saved = tagRepository.save(tag)
         val retrieved = tagRepository.findById(saved.id!!).get()
 
-        assertNotNull(saved.id)
-        assertEquals(TRAVEL, retrieved.name)
+        Assertions.assertNotNull(saved.id)
+        Assertions.assertEquals(TRAVEL, retrieved.name)
     }
 
     @Test
     fun `GIVEN duplicate tag name WHEN saved THEN throws exception`() {
         tagRepository.save(createTag(name = TRAVEL))
 
-        assertThrows(DataIntegrityViolationException::class.java) {
+        Assertions.assertThrows(DataIntegrityViolationException::class.java) {
             tagRepository.save(createTag(name = TRAVEL))
             tagRepository.flush()
         }
@@ -51,15 +48,15 @@ class TagRepositoryTest {
 
         val found = tagRepository.findByName(FOOD)
 
-        assertTrue(found.isPresent)
-        assertEquals(tag.id, found.get().id)
+        Assertions.assertTrue(found.isPresent)
+        Assertions.assertEquals(tag.id, found.get().id)
     }
 
     @Test
     fun `GIVEN no tag WHEN findByName called THEN returns empty`() {
         val found = tagRepository.findByName("NonExistent")
 
-        assertFalse(found.isPresent)
+        Assertions.assertFalse(found.isPresent)
     }
 
     // Validation tests
@@ -67,7 +64,7 @@ class TagRepositoryTest {
     fun `GIVEN tag with blank name WHEN saved THEN validation fails`() {
         val tag = createTag(name = "")
 
-        assertThrows(Exception::class.java) {
+        Assertions.assertThrows(Exception::class.java) {
             tagRepository.saveAndFlush(tag)
         }
     }
@@ -77,7 +74,7 @@ class TagRepositoryTest {
         val longName = "a".repeat(26)
         val tag = createTag(name = longName)
 
-        assertThrows(Exception::class.java) {
+        Assertions.assertThrows(Exception::class.java) {
             tagRepository.saveAndFlush(tag)
         }
     }

@@ -1,5 +1,7 @@
-package org.assignment.blog
+package org.assignment.blog.service
 
+import org.assignment.blog.model.BlogPost
+import org.assignment.blog.repository.BlogPostRepository
 import org.springframework.stereotype.Service
 
 @Service

@@ -1,10 +1,12 @@
-package org.assignment.blog
+package org.assignment.blog.service
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.assignment.blog.model.BlogPost
+import org.assignment.blog.model.Tag
+import org.assignment.blog.repository.TagRepository
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
@@ -42,52 +44,52 @@ class TagServiceTest {
     fun `GIVEN comma-separated tags WHEN parseTagNames THEN returns list of lowercase tags`() {
         val result = tagService.parseTagNames("Kotlin, Spring, Java")
 
-        assertEquals(3, result.size)
-        assertEquals(listOf("kotlin", "spring", "java"), result)
+        Assertions.assertEquals(3, result.size)
+        Assertions.assertEquals(listOf("kotlin", "spring", "java"), result)
     }
 
     @Test
     fun `GIVEN mixed case tags WHEN parseTagNames THEN normalizes to lowercase`() {
         val result = tagService.parseTagNames("KoTlIn, SPRING")
 
-        assertEquals(listOf("kotlin", "spring"), result)
+        Assertions.assertEquals(listOf("kotlin", "spring"), result)
     }
 
     @Test
     fun `GIVEN tags with extra whitespace WHEN parseTagNames THEN trims whitespace`() {
         val result = tagService.parseTagNames("  kotlin  ,   spring   ")
 
-        assertEquals(listOf("kotlin", "spring"), result)
+        Assertions.assertEquals(listOf("kotlin", "spring"), result)
     }
 
     @Test
     fun `GIVEN empty string WHEN parseTagNames THEN returns empty list`() {
         val result = tagService.parseTagNames("")
 
-        assertTrue(result.isEmpty())
+        Assertions.assertTrue(result.isEmpty())
     }
 
     @Test
     fun `GIVEN tags with empty entries WHEN parseTagNames THEN filters out empty strings`() {
         val result = tagService.parseTagNames("kotlin, , spring, ,")
 
-        assertEquals(listOf("kotlin", "spring"), result)
+        Assertions.assertEquals(listOf("kotlin", "spring"), result)
     }
 
     @Test
     fun `GIVEN multiple tags WHEN parseTagNames THEN returns tags in list`() {
         val result = tagService.parseTagNames("food, travel, food")
 
-        assertEquals(listOf("food", "travel", "food"), result)
-        assertEquals(3, result.size)
+        Assertions.assertEquals(listOf("food", "travel", "food"), result)
+        Assertions.assertEquals(3, result.size)
     }
 
     @Test
     fun `GIVEN duplicate tags with different cases WHEN parseTagNames THEN normalizes and returns duplicates`() {
         val result = tagService.parseTagNames("Food, FOOD, food")
 
-        assertEquals(listOf("food", "food", "food"), result)
-        assertEquals(3, result.size)
+        Assertions.assertEquals(listOf("food", "food", "food"), result)
+        Assertions.assertEquals(3, result.size)
     }
 
     // findOrCreateTag tests
@@ -98,7 +100,7 @@ class TagServiceTest {
 
         val result = tagService.findOrCreateTag(FOOD)
 
-        assertEquals(existingTag, result)
+        Assertions.assertEquals(existingTag, result)
         verify(tagRepository).findByName(FOOD)
     }
 
@@ -110,7 +112,7 @@ class TagServiceTest {
 
         val result = tagService.findOrCreateTag(TRAVEL)
 
-        assertEquals(newTag, result)
+        Assertions.assertEquals(newTag, result)
         verify(tagRepository).findByName(TRAVEL)
         verify(tagRepository).save(any<Tag>())
     }
@@ -122,7 +124,7 @@ class TagServiceTest {
 
         tagService.processAndAssociateTags(post, null)
 
-        assertTrue(post.tags.isEmpty())
+        Assertions.assertTrue(post.tags.isEmpty())
     }
 
     @Test
@@ -131,7 +133,7 @@ class TagServiceTest {
 
         tagService.processAndAssociateTags(post, "   ")
 
-        assertTrue(post.tags.isEmpty())
+        Assertions.assertTrue(post.tags.isEmpty())
     }
 
     @Test
@@ -145,9 +147,9 @@ class TagServiceTest {
 
         tagService.processAndAssociateTags(post, "Food, Travel")
 
-        assertEquals(2, post.tags.size)
-        assertTrue(post.tags.contains(foodTag))
-        assertTrue(post.tags.contains(travelTag))
+        Assertions.assertEquals(2, post.tags.size)
+        Assertions.assertTrue(post.tags.contains(foodTag))
+        Assertions.assertTrue(post.tags.contains(travelTag))
     }
 
     @Test
@@ -159,9 +161,9 @@ class TagServiceTest {
 
         tagService.processAndAssociateTags(post, "food, FOOD, Food")
 
-        assertEquals(1, post.tags.size)
-        assertTrue(post.tags.contains(foodTag))
-        verify(tagRepository, org.mockito.kotlin.times(3)).findByName(FOOD)
+        Assertions.assertEquals(1, post.tags.size)
+        Assertions.assertTrue(post.tags.contains(foodTag))
+        verify(tagRepository, times(3)).findByName(FOOD)
     }
 
     // getPostsByTag tests
@@ -177,9 +179,9 @@ class TagServiceTest {
 
         val result = tagService.getPostsByTag(FOOD)
 
-        assertEquals(2, result.size)
-        assertTrue(result.contains(post1))
-        assertTrue(result.contains(post2))
+        Assertions.assertEquals(2, result.size)
+        Assertions.assertTrue(result.contains(post1))
+        Assertions.assertTrue(result.contains(post2))
     }
 
     @Test
@@ -187,10 +189,10 @@ class TagServiceTest {
         whenever(tagRepository.findByName("nonexistent")).thenReturn(Optional.empty())
 
         val exception =
-            assertThrows(NoSuchElementException::class.java) {
+            Assertions.assertThrows(NoSuchElementException::class.java) {
                 tagService.getPostsByTag("nonexistent")
             }
 
-        assertEquals("Tag not found: nonexistent", exception.message)
+        Assertions.assertEquals("Tag not found: nonexistent", exception.message)
     }
 }

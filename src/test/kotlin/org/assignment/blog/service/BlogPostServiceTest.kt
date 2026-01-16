@@ -1,10 +1,12 @@
-package org.assignment.blog
+package org.assignment.blog.service
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.assignment.blog.model.BlogPost
+import org.assignment.blog.model.Tag
+import org.assignment.blog.repository.BlogPostRepository
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
@@ -52,8 +54,8 @@ class BlogPostServiceTest {
 
         val result = blogPostService.getAllPosts()
 
-        assertEquals(2, result.size)
-        assertEquals(posts, result)
+        Assertions.assertEquals(2, result.size)
+        Assertions.assertEquals(posts, result)
     }
 
     @Test
@@ -62,7 +64,7 @@ class BlogPostServiceTest {
 
         val result = blogPostService.getAllPosts()
 
-        assertTrue(result.isEmpty())
+        Assertions.assertTrue(result.isEmpty())
     }
 
     // getPostById tests
@@ -73,7 +75,7 @@ class BlogPostServiceTest {
 
         val result = blogPostService.getPostById(1L)
 
-        assertEquals(post, result)
+        Assertions.assertEquals(post, result)
     }
 
     @Test
@@ -81,11 +83,11 @@ class BlogPostServiceTest {
         whenever(repository.findById(999L)).thenReturn(Optional.empty())
 
         val exception =
-            assertThrows(NoSuchElementException::class.java) {
+            Assertions.assertThrows(NoSuchElementException::class.java) {
                 blogPostService.getPostById(999L)
             }
 
-        assertEquals("Post not found: 999", exception.message)
+        Assertions.assertEquals("Post not found: 999", exception.message)
     }
 
     // createPost tests
@@ -96,7 +98,7 @@ class BlogPostServiceTest {
 
         val result = blogPostService.createPost("New Post", "Content", "Alice", null)
 
-        assertEquals(savedPost, result)
+        Assertions.assertEquals(savedPost, result)
         verify(repository).save(any<BlogPost>())
     }
 
@@ -107,7 +109,7 @@ class BlogPostServiceTest {
 
         val result = blogPostService.createPost("New Post", "Content", "Alice", "food, travel")
 
-        assertEquals(savedPost, result)
+        Assertions.assertEquals(savedPost, result)
         verify(tagService).processAndAssociateTags(any<BlogPost>(), any())
         verify(repository).save(any<BlogPost>())
     }
@@ -122,8 +124,8 @@ class BlogPostServiceTest {
 
         val result = blogPostService.updatePost(1L, "New Title", "New Content", null)
 
-        assertEquals("New Title", result.title)
-        assertEquals("New Content", result.content)
+        Assertions.assertEquals("New Title", result.title)
+        Assertions.assertEquals("New Content", result.content)
         verify(repository).save(any<BlogPost>())
     }
 
@@ -138,7 +140,7 @@ class BlogPostServiceTest {
 
         blogPostService.updatePost(1L, "Title", "Content", "travel")
 
-        assertTrue(existingPost.tags.isEmpty() || existingPost.tags.none { it.name == FOOD })
+        Assertions.assertTrue(existingPost.tags.isEmpty() || existingPost.tags.none { it.name == FOOD })
         verify(tagService).processAndAssociateTags(any<BlogPost>(), any())
         verify(repository).save(any<BlogPost>())
     }
@@ -148,11 +150,11 @@ class BlogPostServiceTest {
         whenever(repository.findById(999L)).thenReturn(Optional.empty())
 
         val exception =
-            assertThrows(NoSuchElementException::class.java) {
+            Assertions.assertThrows(NoSuchElementException::class.java) {
                 blogPostService.updatePost(999L, "Title", "Content", null)
             }
 
-        assertEquals("Post not found: 999", exception.message)
+        Assertions.assertEquals("Post not found: 999", exception.message)
     }
 
     // deletePost tests
@@ -173,7 +175,7 @@ class BlogPostServiceTest {
         blogPostService.deletePost(999L)
 
         verify(repository).existsById(999L)
-        verify(repository, org.mockito.kotlin.never()).deleteById(999L)
+        verify(repository, never()).deleteById(999L)
     }
 
     // getPostStatistics tests
@@ -183,11 +185,11 @@ class BlogPostServiceTest {
 
         val result = blogPostService.getPostStatistics()
 
-        assertEquals(7.0, result["average"])
-        assertEquals(7.0, result["median"])
-        assertEquals(9, result["max"])
-        assertEquals(5, result["min"])
-        assertEquals(21, result["total"])
+        Assertions.assertEquals(7.0, result["average"])
+        Assertions.assertEquals(7.0, result["median"])
+        Assertions.assertEquals(9, result["max"])
+        Assertions.assertEquals(5, result["min"])
+        Assertions.assertEquals(21, result["total"])
     }
 
     @Test
@@ -196,11 +198,11 @@ class BlogPostServiceTest {
 
         val result = blogPostService.getPostStatistics()
 
-        assertEquals(0.0, result["average"])
-        assertEquals(0.0, result["median"])
-        assertEquals(0, result["max"])
-        assertEquals(0, result["min"])
-        assertEquals(0, result["total"])
+        Assertions.assertEquals(0.0, result["average"])
+        Assertions.assertEquals(0.0, result["median"])
+        Assertions.assertEquals(0, result["max"])
+        Assertions.assertEquals(0, result["min"])
+        Assertions.assertEquals(0, result["total"])
     }
 
     @Test
@@ -209,7 +211,7 @@ class BlogPostServiceTest {
 
         val result = blogPostService.getPostStatistics()
 
-        assertEquals(5.0, result["median"]) // (4 + 6) / 2
+        Assertions.assertEquals(5.0, result["median"]) // (4 + 6) / 2
     }
 
     @Test
@@ -218,7 +220,7 @@ class BlogPostServiceTest {
 
         val result = blogPostService.getPostStatistics()
 
-        assertEquals(3.0, result["median"]) // Middle value
+        Assertions.assertEquals(3.0, result["median"]) // Middle value
     }
 
     @Test
@@ -227,11 +229,11 @@ class BlogPostServiceTest {
 
         val result = blogPostService.getPostStatistics()
 
-        assertEquals(10.0, result["average"])
-        assertEquals(10.0, result["median"])
-        assertEquals(10, result["max"])
-        assertEquals(10, result["min"])
-        assertEquals(10, result["total"])
+        Assertions.assertEquals(10.0, result["average"])
+        Assertions.assertEquals(10.0, result["median"])
+        Assertions.assertEquals(10, result["max"])
+        Assertions.assertEquals(10, result["min"])
+        Assertions.assertEquals(10, result["total"])
     }
 
     // getTagString tests
@@ -245,9 +247,9 @@ class BlogPostServiceTest {
 
         val result = blogPostService.getTagString(post)
 
-        assertTrue(result.contains(FOOD))
-        assertTrue(result.contains(TRAVEL))
-        assertTrue(result.contains(", "))
+        Assertions.assertTrue(result.contains(FOOD))
+        Assertions.assertTrue(result.contains(TRAVEL))
+        Assertions.assertTrue(result.contains(", "))
     }
 
     @Test
@@ -256,6 +258,6 @@ class BlogPostServiceTest {
 
         val result = blogPostService.getTagString(post)
 
-        assertEquals("", result)
+        Assertions.assertEquals("", result)
     }
 }

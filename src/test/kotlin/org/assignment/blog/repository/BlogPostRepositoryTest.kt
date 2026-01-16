@@ -1,7 +1,7 @@
-package org.assignment.blog
+package org.assignment.blog.repository
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
+import org.assignment.blog.model.BlogPost
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest
@@ -25,10 +25,10 @@ class BlogPostRepositoryTest(
         val saved = repository.save(post)
         val found = repository.findById(saved.id!!).orElseThrow()
 
-        assertEquals("Hello", found.title)
-        assertEquals("World", found.content)
-        assertEquals("Alice", found.author)
-        assertNotNull(found.createdAt)
+        Assertions.assertEquals("Hello", found.title)
+        Assertions.assertEquals("World", found.content)
+        Assertions.assertEquals("Alice", found.author)
+        Assertions.assertNotNull(found.createdAt)
     }
 
     @Test
@@ -38,6 +38,6 @@ class BlogPostRepositoryTest(
 
         val lengths = repository.getPostLengths().sorted()
 
-        assertEquals(listOf(5, 7), lengths)
+        Assertions.assertEquals(listOf(5, 7), lengths)
     }
 }

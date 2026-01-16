@@ -1,7 +1,6 @@
-package org.assignment.blog
+package org.assignment.blog.model
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
@@ -24,13 +23,13 @@ class BlogPostTest {
                 author = "Test Author",
                 createdAt = LocalDateTime.of(2025, 1, 1, 0, 0),
             )
-        assertEquals("\"Test Post\" by Test Author (2025-01-01)", post.toString())
+        Assertions.assertEquals("\"Test Post\" by Test Author (2025-01-01)", post.toString())
     }
 
     @Test
     fun `GIVEN new post WHEN constructed THEN id is null by default`() {
         val post = BlogPost()
-        assertNull(post.id)
+        Assertions.assertNull(post.id)
     }
 
     @Test

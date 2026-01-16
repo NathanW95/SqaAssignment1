@@ -1,5 +1,7 @@
-package org.assignment.blog
+package org.assignment.blog.controller
 
+import org.assignment.blog.service.BlogPostService
+import org.assignment.blog.service.TagService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
