@@ -117,16 +117,17 @@ class BlogPostServiceTest {
     // updatePost tests
     @Test
     fun `GIVEN existing post WHEN updatePost THEN updates and returns post`() {
-        val existingPost = createPost(id = 1L, title = "Old Title")
-        val updatedPost = createPost(id = 1L, title = "New Title", content = "New Content")
+        val existingPost = createPost(id = 1L, title = "Old Title", content = "Old Content")
         whenever(repository.findById(1L)).thenReturn(Optional.of(existingPost))
-        whenever(repository.save(any<BlogPost>())).thenReturn(updatedPost)
+        whenever(repository.save(any<BlogPost>())).thenReturn(existingPost)
 
         val result = blogPostService.updatePost(1L, "New Title", "New Content", null)
 
+        Assertions.assertEquals("New Title", existingPost.title)
+        Assertions.assertEquals("New Content", existingPost.content)
         Assertions.assertEquals("New Title", result.title)
         Assertions.assertEquals("New Content", result.content)
-        verify(repository).save(any<BlogPost>())
+        verify(repository).save(existingPost)
     }
 
     @Test
