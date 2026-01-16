@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>BlogPostService.kt</h1>
+
+<table class="src">
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package org.assignment.blog.service</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.assignment.blog.model.BlogPost</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.assignment.blog.repository.BlogPostRepository</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.stereotype.Service</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>@Service</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>class BlogPostService(</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    private val repository: BlogPostRepository,</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    private val tagService: TagService,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_12'/>
+12
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_12'>2</a>
+<span>
+1. getAllPosts : removed call to kotlin/jvm/internal/Intrinsics::checkNotNullExpressionValue &rarr; SURVIVED<br/>
+2. getAllPosts : replaced return value with Collections.emptyList for org/assignment/blog/service/BlogPostService::getAllPosts &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>    fun getAllPosts(): List&#60;BlogPost&#62; = repository.findAll()</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    fun getPostById(postId: Long): BlogPost =</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_15'/>
+15
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_15'>1</a>
+<span>
+1. getPostById : removed call to kotlin/jvm/internal/Intrinsics::checkNotNullExpressionValue &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        repository.findById(postId).orElseThrow {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_16'/>
+16
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_16'>1</a>
+<span>
+1. getPostById$lambda$0 : replaced return value with null for org/assignment/blog/service/BlogPostService::getPostById$lambda$0 &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            NoSuchElementException(&#34;Post not found: $postId&#34;)</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_19'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    fun createPost(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        title: String,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        content: String,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        author: String,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_23'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        tags: String?,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    ): BlogPost {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        val post = BlogPost(title = title, content = content, author = author)</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_26'/>
+26
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_26'>1</a>
+<span>
+1. createPost : removed call to org/assignment/blog/service/TagService::processAndAssociateTags &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        tagService.processAndAssociateTags(post, tags)</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_27'/>
+27
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_27'>1</a>
+<span>
+1. createPost : removed call to kotlin/jvm/internal/Intrinsics::checkNotNullExpressionValue &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        return repository.save(post)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_29'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_30'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    fun updatePost(</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_31'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        postId: Long,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_32'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        title: String,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_33'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        content: String,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_34'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        tags: String?,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_35'/>
+35
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_35'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    ): BlogPost {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_36'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        val post = getPostById(postId)</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_37'/>
+37
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_37'>1</a>
+<span>
+1. updatePost : removed call to org/assignment/blog/model/BlogPost::setTitle &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        post.title = title</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_38'/>
+38
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_38'>1</a>
+<span>
+1. updatePost : removed call to org/assignment/blog/model/BlogPost::setContent &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        post.content = content</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_39'/>
+39
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_39'>1</a>
+<span>
+1. updatePost : removed call to java/util/Set::clear &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        post.tags.clear()</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_40'/>
+40
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_40'>1</a>
+<span>
+1. updatePost : removed call to org/assignment/blog/service/TagService::processAndAssociateTags &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        tagService.processAndAssociateTags(post, tags)</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_41'/>
+41
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_41'>1</a>
+<span>
+1. updatePost : removed call to kotlin/jvm/internal/Intrinsics::checkNotNullExpressionValue &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        return repository.save(post)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_42'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_43'/>
+43
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_43'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_44'/>
+44
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_44'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    fun deletePost(postId: Long) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_45'/>
+45
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_45'>1</a>
+<span>
+1. deletePost : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (repository.existsById(postId)) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_46'/>
+46
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_46'>1</a>
+<span>
+1. deletePost : removed call to org/assignment/blog/repository/BlogPostRepository::deleteById &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            repository.deleteById(postId)</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_47'/>
+47
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_47'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_48'/>
+48
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_48'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_49'/>
+49
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_49'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_50'/>
+50
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_50'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    fun getPostStatistics(): Map&#60;String, Any&#62; {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_51'/>
+51
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_51'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        val lengths = repository.getPostLengths()</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_52'/>
+52
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_52'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_53'/>
+53
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_53'>1</a>
+<span>
+1. getPostStatistics : negated conditional &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (lengths.isEmpty()) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_54'/>
+54
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_54'>1</a>
+<span>
+1. getPostStatistics : replaced return value with Collections.emptyMap for org/assignment/blog/service/BlogPostService::getPostStatistics &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return mapOf(</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_55'/>
+55
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_55'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                &#34;average&#34; to 0.0,</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_56'/>
+56
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_56'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                &#34;median&#34; to 0.0,</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_57'/>
+57
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_57'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                &#34;max&#34; to 0,</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_58'/>
+58
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_58'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                &#34;min&#34; to 0,</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_59'/>
+59
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_59'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                &#34;total&#34; to 0,</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_60'/>
+60
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_60'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            )</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_61'/>
+61
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_61'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_62'/>
+62
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_62'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_63'/>
+63
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_63'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        val sorted = lengths.sorted()</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_64'/>
+64
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_64'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        val average = lengths.average()</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_65'/>
+65
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_65'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        val median =</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_66'/>
+66
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_66'>2</a>
+<span>
+1. getPostStatistics : negated conditional &rarr; KILLED<br/>
+2. getPostStatistics : Replaced integer modulus with multiplication &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            if (sorted.size % 2 == 1) {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_67'/>
+67
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_67'>1</a>
+<span>
+1. getPostStatistics : Replaced integer division with multiplication &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                sorted[sorted.size / 2].toDouble()</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_68'/>
+68
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_68'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            } else {</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_69'/>
+69
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_69'>5</a>
+<span>
+1. getPostStatistics : Replaced double division with multiplication &rarr; KILLED<br/>
+2. getPostStatistics : Replaced integer division with multiplication &rarr; KILLED<br/>
+3. getPostStatistics : Replaced integer division with multiplication &rarr; KILLED<br/>
+4. getPostStatistics : Replaced integer subtraction with addition &rarr; KILLED<br/>
+5. getPostStatistics : Replaced integer addition with subtraction &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                (sorted[sorted.size / 2 - 1] + sorted[sorted.size / 2]) / 2.0</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_70'/>
+70
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_70'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_71'/>
+71
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_71'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_72'/>
+72
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_72'>1</a>
+<span>
+1. getPostStatistics : replaced return value with Collections.emptyMap for org/assignment/blog/service/BlogPostService::getPostStatistics &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return mapOf(</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_73'/>
+73
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_73'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            &#34;average&#34; to average,</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_74'/>
+74
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_74'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            &#34;median&#34; to median,</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_75'/>
+75
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_75'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            &#34;max&#34; to sorted.last(),</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_76'/>
+76
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_76'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            &#34;min&#34; to sorted.first(),</span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_77'/>
+77
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_77'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            &#34;total&#34; to lengths.sum(),</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_78'/>
+78
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_78'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        )</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_79'/>
+79
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_79'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_80'/>
+80
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_80'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_81'/>
+81
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_81'>2</a>
+<span>
+1. getTagString$lambda$0 : replaced return value with null for org/assignment/blog/service/BlogPostService::getTagString$lambda$0 &rarr; KILLED<br/>
+2. getTagString : replaced return value with &#34;&#34; for org/assignment/blog/service/BlogPostService::getTagString &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    fun getTagString(post: BlogPost): String = post.tags.joinToString(&#34;, &#34;) { it.name }</span></pre></td></tr>
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@58594a11_82'/>
+82
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_82'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58594a11_12'>12</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_12'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getAllPosts<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN posts exist WHEN getAllPosts THEN returns all posts()]</span></span> replaced return value with Collections.emptyList for org/assignment/blog/service/BlogPostService::getAllPosts &rarr; KILLED</span>
+</div> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>getAllPosts<br/><b>Killed by : </b>none</span></span> removed call to kotlin/jvm/internal/Intrinsics::checkNotNullExpressionValue &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=org.assignment.blog.service.BlogPostService,-method=getAllPosts,-methodDesc=()Ljava/util/List;],-indexes=[8],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=org.assignment.blog.service.BlogPostService,-method=getAllPosts,-methodDesc=()Ljava/util/List;],-indexes=[8],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=org.assignment.blog.service.BlogPostService,-method=getAllPosts,-methodDesc=()Ljava/util/List;],-indexes=[8],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN no posts WHEN getAllPosts THEN returns empty list()]</li> <li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN posts exist WHEN getAllPosts THEN returns all posts()]</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58594a11_15'>15</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_15'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getPostById<br/><b>Killed by : </b>none</span></span> removed call to kotlin/jvm/internal/Intrinsics::checkNotNullExpressionValue &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=org.assignment.blog.service.BlogPostService,-method=getPostById,-methodDesc=(J)Lorg/assignment/blog/model/BlogPost;],-indexes=[13],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=org.assignment.blog.service.BlogPostService,-method=getPostById,-methodDesc=(J)Lorg/assignment/blog/model/BlogPost;],-indexes=[13],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=org.assignment.blog.service.BlogPostService,-method=getPostById,-methodDesc=(J)Lorg/assignment/blog/model/BlogPost;],-indexes=[13],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN existing post WHEN getPostById THEN returns post()]</li> <li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN existing post WHEN updatePost THEN updates and returns post()]</li> <li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN existing post with tags WHEN updatePost THEN clears old tags and adds new ones()]</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58594a11_16'>16</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_16'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getPostById$lambda$0<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN non-existent post WHEN updatePost THEN throws NoSuchElementException()]</span></span> replaced return value with null for org/assignment/blog/service/BlogPostService::getPostById$lambda$0 &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58594a11_26'>26</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_26'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>createPost<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN valid post data with tags WHEN createPost THEN processes tags and saves post()]</span></span> removed call to org/assignment/blog/service/TagService::processAndAssociateTags &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58594a11_27'>27</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_27'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>createPost<br/><b>Killed by : </b>none</span></span> removed call to kotlin/jvm/internal/Intrinsics::checkNotNullExpressionValue &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=org.assignment.blog.service.BlogPostService,-method=createPost,-methodDesc=(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/assignment/blog/model/BlogPost;],-indexes=[40],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=org.assignment.blog.service.BlogPostService,-method=createPost,-methodDesc=(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/assignment/blog/model/BlogPost;],-indexes=[40],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=org.assignment.blog.service.BlogPostService,-method=createPost,-methodDesc=(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/assignment/blog/model/BlogPost;],-indexes=[40],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN valid post data without tags WHEN createPost THEN saves and returns post()]</li> <li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN valid post data with tags WHEN createPost THEN processes tags and saves post()]</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58594a11_37'>37</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_37'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>updatePost<br/><b>Killed by : </b>none</span></span> removed call to org/assignment/blog/model/BlogPost::setTitle &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=org.assignment.blog.service.BlogPostService,-method=updatePost,-methodDesc=(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/assignment/blog/model/BlogPost;],-indexes=[18],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=org.assignment.blog.service.BlogPostService,-method=updatePost,-methodDesc=(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/assignment/blog/model/BlogPost;],-indexes=[18],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=org.assignment.blog.service.BlogPostService,-method=updatePost,-methodDesc=(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/assignment/blog/model/BlogPost;],-indexes=[18],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN existing post WHEN updatePost THEN updates and returns post()]</li> <li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN existing post with tags WHEN updatePost THEN clears old tags and adds new ones()]</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58594a11_38'>38</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_38'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>updatePost<br/><b>Killed by : </b>none</span></span> removed call to org/assignment/blog/model/BlogPost::setContent &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=org.assignment.blog.service.BlogPostService,-method=updatePost,-methodDesc=(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/assignment/blog/model/BlogPost;],-indexes=[23],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=org.assignment.blog.service.BlogPostService,-method=updatePost,-methodDesc=(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/assignment/blog/model/BlogPost;],-indexes=[23],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=org.assignment.blog.service.BlogPostService,-method=updatePost,-methodDesc=(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/assignment/blog/model/BlogPost;],-indexes=[23],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN existing post WHEN updatePost THEN updates and returns post()]</li> <li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN existing post with tags WHEN updatePost THEN clears old tags and adds new ones()]</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58594a11_39'>39</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_39'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>updatePost<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN existing post with tags WHEN updatePost THEN clears old tags and adds new ones()]</span></span> removed call to java/util/Set::clear &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58594a11_40'>40</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_40'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>updatePost<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN existing post with tags WHEN updatePost THEN clears old tags and adds new ones()]</span></span> removed call to org/assignment/blog/service/TagService::processAndAssociateTags &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58594a11_41'>41</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_41'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>updatePost<br/><b>Killed by : </b>none</span></span> removed call to kotlin/jvm/internal/Intrinsics::checkNotNullExpressionValue &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=org.assignment.blog.service.BlogPostService,-method=updatePost,-methodDesc=(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/assignment/blog/model/BlogPost;],-indexes=[44],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=org.assignment.blog.service.BlogPostService,-method=updatePost,-methodDesc=(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/assignment/blog/model/BlogPost;],-indexes=[44],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=org.assignment.blog.service.BlogPostService,-method=updatePost,-methodDesc=(JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/assignment/blog/model/BlogPost;],-indexes=[44],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN existing post WHEN updatePost THEN updates and returns post()]</li> <li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN existing post with tags WHEN updatePost THEN clears old tags and adds new ones()]</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58594a11_45'>45</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_45'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>deletePost<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN non-existent post WHEN deletePost THEN does not attempt deletion()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58594a11_46'>46</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_46'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>deletePost<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN existing post WHEN deletePost THEN deletes post()]</span></span> removed call to org/assignment/blog/repository/BlogPostRepository::deleteById &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58594a11_53'>53</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_53'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getPostStatistics<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN even number of lengths WHEN getPostStatistics THEN calculates correct median()]</span></span> negated conditional &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58594a11_54'>54</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_54'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getPostStatistics<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN no posts WHEN getPostStatistics THEN returns zero statistics()]</span></span> replaced return value with Collections.emptyMap for org/assignment/blog/service/BlogPostService::getPostStatistics &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58594a11_66'>66</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_66'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getPostStatistics<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN even number of lengths WHEN getPostStatistics THEN calculates correct median()]</span></span> negated conditional &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>getPostStatistics<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN odd number of lengths WHEN getPostStatistics THEN calculates correct median()]</span></span> Replaced integer modulus with multiplication &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58594a11_67'>67</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_67'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getPostStatistics<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN odd number of lengths WHEN getPostStatistics THEN calculates correct median()]</span></span> Replaced integer division with multiplication &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58594a11_69'>69</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_69'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getPostStatistics<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN even number of lengths WHEN getPostStatistics THEN calculates correct median()]</span></span> Replaced double division with multiplication &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>getPostStatistics<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN even number of lengths WHEN getPostStatistics THEN calculates correct median()]</span></span> Replaced integer division with multiplication &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>getPostStatistics<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN even number of lengths WHEN getPostStatistics THEN calculates correct median()]</span></span> Replaced integer division with multiplication &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>getPostStatistics<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN even number of lengths WHEN getPostStatistics THEN calculates correct median()]</span></span> Replaced integer subtraction with addition &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>getPostStatistics<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN even number of lengths WHEN getPostStatistics THEN calculates correct median()]</span></span> Replaced integer addition with subtraction &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58594a11_72'>72</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_72'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getPostStatistics<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN even number of lengths WHEN getPostStatistics THEN calculates correct median()]</span></span> replaced return value with Collections.emptyMap for org/assignment/blog/service/BlogPostService::getPostStatistics &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@58594a11_81'>81</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@58594a11_81'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTagString$lambda$0<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN post with tags WHEN getTagString THEN returns comma-separated tag names()]</span></span> replaced return value with null for org/assignment/blog/service/BlogPostService::getTagString$lambda$0 &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>getTagString<br/><b>Killed by : </b>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN post with tags WHEN getTagString THEN returns comma-separated tag names()]</span></span> replaced return value with &#34;&#34; for org/assignment/blog/service/BlogPostService::getTagString &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+<li class='mutator'>EMPTY_RETURNS</li>
+<li class='mutator'>FALSE_RETURNS</li>
+<li class='mutator'>INCREMENTS</li>
+<li class='mutator'>INVERT_NEGS</li>
+<li class='mutator'>MATH</li>
+<li class='mutator'>NEGATE_CONDITIONALS</li>
+<li class='mutator'>NULL_RETURNS</li>
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+<li class='mutator'>TRUE_RETURNS</li>
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN existing post WHEN updatePost THEN updates and returns post()] (5 ms)</li><li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN existing post with tags WHEN updatePost THEN clears old tags and adds new ones()] (2 ms)</li><li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN existing post WHEN getPostById THEN returns post()] (4 ms)</li><li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN even number of lengths WHEN getPostStatistics THEN calculates correct median()] (3 ms)</li><li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN post with tags WHEN getTagString THEN returns comma-separated tag names()] (4 ms)</li><li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN no posts WHEN getAllPosts THEN returns empty list()] (3 ms)</li><li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN posts exist WHEN getAllPosts THEN returns all posts()] (4 ms)</li><li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN no posts WHEN getPostStatistics THEN returns zero statistics()] (4 ms)</li><li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN odd number of lengths WHEN getPostStatistics THEN calculates correct median()] (5 ms)</li><li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN single post WHEN getPostStatistics THEN returns correct statistics()] (5 ms)</li><li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN posts with lengths WHEN getPostStatistics THEN returns correct statistics()] (5 ms)</li><li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN existing post WHEN deletePost THEN deletes post()] (4 ms)</li><li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN valid post data without tags WHEN createPost THEN saves and returns post()] (7 ms)</li><li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN valid post data with tags WHEN createPost THEN processes tags and saves post()] (9 ms)</li><li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN non-existent post WHEN updatePost THEN throws NoSuchElementException()] (3 ms)</li><li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN non-existent post WHEN getPostById THEN throws NoSuchElementException()] (5 ms)</li><li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN post without tags WHEN getTagString THEN returns empty string()] (3 ms)</li><li>org.assignment.blog.service.BlogPostServiceTest.[engine:junit-jupiter]/[class:org.assignment.blog.service.BlogPostServiceTest]/[method:GIVEN non-existent post WHEN deletePost THEN does not attempt deletion()] (3 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> 1.20.3
+
+</body>
+</html>
