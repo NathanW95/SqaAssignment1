@@ -1,9 +1,7 @@
 package org.assignment.blog
 
 import org.hamcrest.Matchers.containsString
-import org.hamcrest.Matchers.not
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.argThat
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,7 +15,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.model
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.view
-import java.util.Optional
 
 @WebMvcTest(BlogController::class)
 class BlogControllerTest {
@@ -25,14 +22,15 @@ class BlogControllerTest {
     lateinit var mockMvc: MockMvc
 
     @MockitoBean
-    lateinit var repository: BlogPostRepository
+    lateinit var blogPostService: BlogPostService
 
     @MockitoBean
-    lateinit var tagRepository: TagRepository
+    lateinit var tagService: TagService
 
     companion object {
         const val TRAVEL = "travel"
         const val FOOD = "food"
+        const val TRAVEL_AND_FOOD = "travel, food"
 
         fun createPost(
             id: Long = 1L,
@@ -40,18 +38,13 @@ class BlogControllerTest {
             content: String = "Test Content",
             author: String = "Alice",
         ) = BlogPost(id = id, title = title, content = content, author = author)
-
-        fun createTag(
-            id: Long = 1L,
-            name: String = TRAVEL,
-        ) = Tag(id = id, name = name)
     }
 
     // Index/List view tests
     @Test
     fun `GIVEN existing posts WHEN GET index THEN list is shown`() {
         val post = createPost(title = "Hello", content = "Content")
-        whenever(repository.findAll()).thenReturn(listOf(post))
+        whenever(blogPostService.getAllPosts()).thenReturn(listOf(post))
 
         mockMvc
             .perform(get("/"))
@@ -77,21 +70,19 @@ class BlogControllerTest {
             .perform(
                 post("/create")
                     .param("title", "New Post")
-                    .param("content", "Body")
-                    .param("author", "Bob"),
+                    .param("content", "New Content")
+                    .param("author", "Alice"),
             ).andExpect(status().is3xxRedirection)
             .andExpect(redirectedUrl("/"))
 
-        verify(repository).save(
-            argThat { title == "New Post" && content == "Body" && author == "Bob" },
-        )
+        verify(blogPostService).createPost("New Post", "New Content", "Alice", null)
     }
 
     // View single post tests
     @Test
     fun `GIVEN existing post WHEN GET post THEN post page is shown`() {
         val post = createPost(title = "Title", content = "Body")
-        whenever(repository.findById(1L)).thenReturn(Optional.of(post))
+        whenever(blogPostService.getPostById(1L)).thenReturn(post)
 
         mockMvc
             .perform(get("/post/1"))
@@ -102,11 +93,25 @@ class BlogControllerTest {
             .andExpect(content().string(containsString("Body")))
     }
 
+    @Test
+    fun `GIVEN non-existent post WHEN GET post THEN exception is thrown`() {
+        whenever(blogPostService.getPostById(999L))
+            .thenThrow(NoSuchElementException("Post not found: 999"))
+
+        try {
+            mockMvc.perform(get("/post/999"))
+            assert(false) { "Expected exception to be thrown" }
+        } catch (e: Exception) {
+            assert(e.cause is NoSuchElementException)
+        }
+    }
+
     // Edit post tests
     @Test
     fun `GIVEN existing post WHEN GET edit THEN edit view is shown`() {
         val post = BlogPost(id = 1L, title = "Old", content = "Body", author = "Alice")
-        whenever(repository.findById(1L)).thenReturn(Optional.of(post))
+        whenever(blogPostService.getPostById(1L)).thenReturn(post)
+        whenever(blogPostService.getTagString(post)).thenReturn("")
 
         mockMvc
             .perform(get("/edit/1"))
@@ -116,10 +121,20 @@ class BlogControllerTest {
     }
 
     @Test
-    fun `GIVEN existing post WHEN POST edit THEN post is updated and redirected`() {
-        val post = BlogPost(id = 1L, title = "Old", content = "Old content", author = "Alice")
-        whenever(repository.findById(1L)).thenReturn(Optional.of(post))
+    fun `GIVEN non-existent post WHEN GET edit THEN exception is thrown`() {
+        whenever(blogPostService.getPostById(999L))
+            .thenThrow(NoSuchElementException("Post not found: 999"))
 
+        try {
+            mockMvc.perform(get("/edit/999"))
+            assert(false) { "Expected exception to be thrown" }
+        } catch (e: Exception) {
+            assert(e.cause is NoSuchElementException)
+        }
+    }
+
+    @Test
+    fun `GIVEN existing post WHEN POST edit THEN post is updated and redirected`() {
         mockMvc
             .perform(
                 post("/edit/1")
@@ -128,41 +143,42 @@ class BlogControllerTest {
             ).andExpect(status().is3xxRedirection)
             .andExpect(redirectedUrl("/post/1"))
 
-        verify(repository).save(
-            argThat { id == 1L && title == "New" && content == "New content" },
-        )
+        verify(blogPostService).updatePost(1L, "New", "New content", null)
     }
 
     // Delete post tests
     @Test
     fun `GIVEN existing post WHEN POST delete THEN post is deleted and redirected`() {
-        whenever(repository.existsById(1L)).thenReturn(true)
-
         mockMvc
             .perform(post("/delete/1"))
             .andExpect(status().is3xxRedirection)
             .andExpect(redirectedUrl("/"))
 
-        verify(repository).deleteById(1L)
+        verify(blogPostService).deletePost(1L)
     }
 
     @Test
     fun `GIVEN non-existent post WHEN POST delete THEN redirects without error`() {
-        whenever(repository.existsById(999L)).thenReturn(false)
-
         mockMvc
             .perform(post("/delete/999"))
             .andExpect(status().is3xxRedirection)
             .andExpect(redirectedUrl("/"))
 
-        verify(repository).existsById(999L)
-        verify(repository, org.mockito.kotlin.never()).deleteById(999L)
+        verify(blogPostService).deletePost(999L)
     }
 
     // Statistics tests
     @Test
     fun `GIVEN lengths WHEN GET stats THEN stats are calculated and shown`() {
-        whenever(repository.getPostLengths()).thenReturn(listOf(5, 7, 9))
+        val stats =
+            mapOf(
+                "average" to 7.0,
+                "median" to 7.0,
+                "max" to 9,
+                "min" to 5,
+                "total" to 21,
+            )
+        whenever(blogPostService.getPostStatistics()).thenReturn(stats)
 
         mockMvc
             .perform(get("/stats"))
@@ -178,7 +194,15 @@ class BlogControllerTest {
 
     @Test
     fun `GIVEN no lengths WHEN GET stats is called THEN zero statistics are shown`() {
-        whenever(repository.getPostLengths()).thenReturn(emptyList())
+        val stats =
+            mapOf(
+                "average" to 0.0,
+                "median" to 0.0,
+                "max" to 0,
+                "min" to 0,
+                "total" to 0,
+            )
+        whenever(blogPostService.getPostStatistics()).thenReturn(stats)
 
         mockMvc
             .perform(get("/stats"))
@@ -194,7 +218,15 @@ class BlogControllerTest {
 
     @Test
     fun `GIVEN even number of lengths WHEN GET stats THEN median is average of middle two`() {
-        whenever(repository.getPostLengths()).thenReturn(listOf(10, 2, 6, 4))
+        val stats =
+            mapOf(
+                "average" to 5.5,
+                "median" to 5.0,
+                "max" to 10,
+                "min" to 2,
+                "total" to 22,
+            )
+        whenever(blogPostService.getPostStatistics()).thenReturn(stats)
 
         mockMvc
             .perform(get("/stats"))
@@ -207,56 +239,17 @@ class BlogControllerTest {
     // Tag association tests
     @Test
     fun `GIVEN valid form with tags WHEN POST create THEN post is saved with tags`() {
-        val tag1 = Tag(id = 1L, name = "kotlin")
-        val tag2 = Tag(id = 2L, name = "spring")
-
-        whenever(tagRepository.findByName("kotlin")).thenReturn(Optional.of(tag1))
-        whenever(tagRepository.findByName("spring")).thenReturn(Optional.of(tag2))
-
         mockMvc
             .perform(
                 post("/create")
                     .param("title", "New Post")
                     .param("content", "Body")
                     .param("author", "Bob")
-                    .param("tags", "Kotlin, Spring"),
+                    .param("tags", TRAVEL_AND_FOOD),
             ).andExpect(status().is3xxRedirection)
             .andExpect(redirectedUrl("/"))
 
-        verify(repository).save(
-            argThat {
-                title == "New Post" &&
-                    content == "Body" &&
-                    author == "Bob" &&
-                    tags.size == 2 &&
-                    tags.any { it.name == "kotlin" } &&
-                    tags.any { it.name == "spring" }
-            },
-        )
-    }
-
-    @Test
-    fun `GIVEN form with new tags WHEN POST create THEN new tags are created`() {
-        val newTag = Tag(id = 1L, name = "travel")
-        whenever(tagRepository.findByName("travel")).thenReturn(Optional.empty())
-        whenever(tagRepository.save(argThat { name == "travel" })).thenReturn(newTag)
-
-        mockMvc
-            .perform(
-                post("/create")
-                    .param("title", "Post")
-                    .param("content", "Content")
-                    .param("author", "Alice")
-                    .param("tags", "Travel"),
-            ).andExpect(status().is3xxRedirection)
-            .andExpect(redirectedUrl("/"))
-
-        verify(repository).save(
-            argThat {
-                tags.size == 1 &&
-                    tags.first().name == "travel"
-            },
-        )
+        verify(blogPostService).createPost("New Post", "Body", "Bob", TRAVEL_AND_FOOD)
     }
 
     @Test
@@ -271,154 +264,30 @@ class BlogControllerTest {
             ).andExpect(status().is3xxRedirection)
             .andExpect(redirectedUrl("/"))
 
-        verify(repository).save(
-            argThat { tags.isEmpty() },
-        )
+        verify(blogPostService).createPost("Post", "Content", "Alice", "")
     }
 
     @Test
-    fun `GIVEN existing post WHEN POST edit with tags THEN tags are updated`() {
-        val post = BlogPost(id = 1L, title = "Old", content = "Old content", author = "Alice")
-        val tag = Tag(id = 1L, name = "food")
-
-        whenever(repository.findById(1L)).thenReturn(Optional.of(post))
-        whenever(tagRepository.findByName("food")).thenReturn(Optional.of(tag))
-
+    fun `GIVEN existing post WHEN POST edit with tags THEN delegates to service with tags`() {
         mockMvc
             .perform(
                 post("/edit/1")
                     .param("title", "New")
                     .param("content", "New content")
-                    .param("tags", "Food"),
+                    .param("tags", FOOD),
             ).andExpect(status().is3xxRedirection)
             .andExpect(redirectedUrl("/post/1"))
 
-        verify(repository).save(
-            argThat {
-                id == 1L &&
-                    title == "New" &&
-                    content == "New content" &&
-                    tags.size == 1 &&
-                    tags.first().name == "food"
-            },
-        )
-    }
-
-    @Test
-    fun `GIVEN existing post WHEN POST edit with new tags THEN new tags are created`() {
-        val post = BlogPost(id = 1L, title = "Old", content = "Old content", author = "Alice")
-        val newTag = Tag(id = 2L, name = "travel")
-
-        whenever(repository.findById(1L)).thenReturn(Optional.of(post))
-        whenever(tagRepository.findByName("travel")).thenReturn(Optional.empty())
-        whenever(tagRepository.save(argThat { name == "travel" })).thenReturn(newTag)
-
-        mockMvc
-            .perform(
-                post("/edit/1")
-                    .param("title", "Updated Title")
-                    .param("content", "Updated content")
-                    .param("tags", "Travel"),
-            ).andExpect(status().is3xxRedirection)
-            .andExpect(redirectedUrl("/post/1"))
-
-        verify(repository).save(
-            argThat {
-                id == 1L &&
-                    tags.size == 1 &&
-                    tags.first().name == "travel"
-            },
-        )
-    }
-
-    // Tag normalization tests
-    @Test
-    fun `GIVEN mixed case tags WHEN POST create THEN tags are normalized to lowercase`() {
-        val kotlinTag = Tag(id = 1L, name = "kotlin")
-        whenever(tagRepository.findByName("kotlin")).thenReturn(Optional.of(kotlinTag))
-
-        mockMvc
-            .perform(
-                post("/create")
-                    .param("title", "Post")
-                    .param("content", "Content")
-                    .param("author", "Alice")
-                    .param("tags", "KoTlIn"),
-            ).andExpect(status().is3xxRedirection)
-            .andExpect(redirectedUrl("/"))
-
-        verify(repository).save(
-            argThat {
-                tags.size == 1 &&
-                    tags.first().name == "kotlin"
-            },
-        )
-    }
-
-    @Test
-    fun `GIVEN duplicate tags with different cases WHEN POST create THEN only one tag is stored`() {
-        val foodTag = Tag(id = 1L, name = "food")
-        whenever(tagRepository.findByName("food")).thenReturn(Optional.of(foodTag))
-
-        mockMvc
-            .perform(
-                post("/create")
-                    .param("title", "Post")
-                    .param("content", "Content")
-                    .param("author", "Alice")
-                    .param("tags", "Food, FOOD, food"),
-            ).andExpect(status().is3xxRedirection)
-            .andExpect(redirectedUrl("/"))
-
-        verify(repository).save(
-            argThat {
-                tags.size == 1 &&
-                    tags.first().name == "food"
-            },
-        )
-    }
-
-    @Test
-    fun `GIVEN uppercase tag WHEN POST create THEN tag is stored as lowercase`() {
-        val travelTag = Tag(id = 1L, name = "travel")
-        whenever(tagRepository.findByName("travel")).thenReturn(Optional.empty())
-        whenever(tagRepository.save(argThat { name == "travel" })).thenReturn(travelTag)
-
-        mockMvc
-            .perform(
-                post("/create")
-                    .param("title", "Post")
-                    .param("content", "Content")
-                    .param("author", "Alice")
-                    .param("tags", "TRAVEL"),
-            ).andExpect(status().is3xxRedirection)
-            .andExpect(redirectedUrl("/"))
-
-        verify(tagRepository).findByName("travel")
-        verify(tagRepository).save(argThat { name == "travel" })
+        verify(blogPostService).updatePost(1L, "New", "New content", FOOD)
     }
 
     // Tag filtering tests
     @Test
     fun `GIVEN existing tag WHEN GET filter by tag THEN only posts with that tag are shown`() {
-        val travelTag = createTag(id = 1L, name = TRAVEL)
-        val foodTag = createTag(id = 2L, name = FOOD)
-
         val post1 = createPost(id = 1L, title = "Travel Post 1", content = "Content 1")
         val post2 = createPost(id = 2L, title = "Travel Post 2", content = "Content 2", author = "Bob")
-        val post3 = createPost(id = 3L, title = "Food Post", content = "Content 3", author = "Charlie")
 
-        // Posts 1 and 2 have travel tag
-        post1.tags.add(travelTag)
-        post2.tags.add(travelTag)
-        travelTag.posts.add(post1)
-        travelTag.posts.add(post2)
-
-        // Post 3 has food tag (different tag)
-        post3.tags.add(foodTag)
-        foodTag.posts.add(post3)
-
-        whenever(tagRepository.findByName(TRAVEL)).thenReturn(Optional.of(travelTag))
+        whenever(tagService.getPostsByTag(TRAVEL)).thenReturn(listOf(post1, post2))
 
         mockMvc
             .perform(get("/tag/$TRAVEL"))
@@ -428,12 +297,12 @@ class BlogControllerTest {
             .andExpect(model().attribute("filterTag", TRAVEL))
             .andExpect(content().string(containsString("Travel Post 1")))
             .andExpect(content().string(containsString("Travel Post 2")))
-            .andExpect(content().string(not(containsString("Food Post"))))
     }
 
     @Test
     fun `GIVEN non-existent tag WHEN GET filter by tag THEN exception is thrown`() {
-        whenever(tagRepository.findByName("nonexistent")).thenReturn(Optional.empty())
+        whenever(tagService.getPostsByTag("nonexistent"))
+            .thenThrow(NoSuchElementException("Tag not found: nonexistent"))
 
         try {
             mockMvc.perform(get("/tag/nonexistent"))

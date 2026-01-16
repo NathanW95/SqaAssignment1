@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 class BlogController(
-    private val repository: BlogPostRepository,
-    private val tagRepository: TagRepository,
+    private val blogPostService: BlogPostService,
+    private val tagService: TagService,
 ) {
     @GetMapping("/")
     fun index(model: Model): String {
         model.addAttribute("title", "Blog Posts")
-        model.addAttribute("posts", repository.findAll())
+        model.addAttribute("posts", blogPostService.getAllPosts())
         return "index"
     }
 
@@ -32,9 +32,7 @@ class BlogController(
         @RequestParam author: String,
         @RequestParam(required = false) tags: String?,
     ): String {
-        val post = BlogPost(title = title, content = content, author = author)
-        processAndAssociateTags(post, tags)
-        repository.save(post)
+        blogPostService.createPost(title, content, author, tags)
         return "redirect:/"
     }
 
@@ -43,7 +41,7 @@ class BlogController(
         @PathVariable("postId") postId: Long,
         model: Model,
     ): String {
-        val post = getPostOrThrow(postId)
+        val post = blogPostService.getPostById(postId)
         model.addAttribute("title", post.title)
         model.addAttribute("post", post)
         return "post"
@@ -54,8 +52,8 @@ class BlogController(
         @PathVariable("postId") postId: Long,
         model: Model,
     ): String {
-        val post = getPostOrThrow(postId)
-        val tagString = post.tags.joinToString(", ") { it.name }
+        val post = blogPostService.getPostById(postId)
+        val tagString = blogPostService.getTagString(post)
         model.addAttribute("title", "Edit Post")
         model.addAttribute("post", post)
         model.addAttribute("tagString", tagString)
@@ -69,12 +67,7 @@ class BlogController(
         @RequestParam content: String,
         @RequestParam(required = false) tags: String?,
     ): String {
-        val post = getPostOrThrow(postId)
-        post.title = title
-        post.content = content
-        post.tags.clear()
-        processAndAssociateTags(post, tags)
-        repository.save(post)
+        blogPostService.updatePost(postId, title, content, tags)
         return "redirect:/post/$postId"
     }
 
@@ -82,9 +75,7 @@ class BlogController(
     fun deleteAction(
         @PathVariable("postId") postId: Long,
     ): String {
-        if (repository.existsById(postId)) {
-            repository.deleteById(postId)
-        }
+        blogPostService.deletePost(postId)
         return "redirect:/"
     }
 
@@ -93,75 +84,22 @@ class BlogController(
         @PathVariable tagName: String,
         model: Model,
     ): String {
-        val tag =
-            tagRepository.findByName(tagName).orElse(null)
-                ?: throw NoSuchElementException("Tag not found: $tagName")
+        val posts = tagService.getPostsByTag(tagName)
         model.addAttribute("title", "Posts tagged with: $tagName")
-        model.addAttribute("posts", tag.posts)
+        model.addAttribute("posts", posts)
         model.addAttribute("filterTag", tagName)
         return "index"
     }
 
     @GetMapping("/stats")
     fun stats(model: Model): String {
-        val lengths = repository.getPostLengths()
-        if (lengths.isEmpty()) {
-            model.addAttribute("title", "Post Statistics")
-            model.addAttribute("averageLength", 0.0)
-            model.addAttribute("medianLength", 0.0)
-            model.addAttribute("maxLength", 0)
-            model.addAttribute("minLength", 0)
-            model.addAttribute("totalLength", 0)
-            return "stats"
-        }
-
-        val sorted = lengths.sorted()
-        val average = String.format("%.2f", lengths.average()).toDouble()
-        val median =
-            if (sorted.size % 2 == 1) {
-                String.format("%.2f", sorted[sorted.size / 2].toDouble()).toDouble()
-            } else {
-                String.format("%.2f", (sorted[sorted.size / 2 - 1] + sorted[sorted.size / 2]) / 2.0).toDouble()
-            }
-        val max = sorted.last()
-        val min = sorted.first()
-        val total = lengths.sum()
-
+        val statistics = blogPostService.getPostStatistics()
         model.addAttribute("title", "Post Statistics")
-        model.addAttribute("averageLength", average)
-        model.addAttribute("medianLength", median)
-        model.addAttribute("maxLength", max)
-        model.addAttribute("minLength", min)
-        model.addAttribute("totalLength", total)
+        model.addAttribute("averageLength", String.format("%.2f", statistics["average"]).toDouble())
+        model.addAttribute("medianLength", String.format("%.2f", statistics["median"]).toDouble())
+        model.addAttribute("maxLength", statistics["max"])
+        model.addAttribute("minLength", statistics["min"])
+        model.addAttribute("totalLength", statistics["total"])
         return "stats"
     }
-
-    private fun processAndAssociateTags(
-        post: BlogPost,
-        tagsString: String?,
-    ) {
-        if (tagsString.isNullOrBlank()) return
-
-        val tagNames = parseTagNames(tagsString)
-        tagNames.forEach { tagName ->
-            val tag = findOrCreateTag(tagName)
-            post.tags.add(tag)
-        }
-    }
-
-    private fun parseTagNames(tagsString: String): List<String> =
-        tagsString
-            .split(",")
-            .map { it.trim().lowercase() }
-            .filter { it.isNotEmpty() }
-
-    private fun findOrCreateTag(tagName: String): Tag =
-        tagRepository.findByName(tagName).orElseGet {
-            tagRepository.save(Tag(name = tagName))
-        }
-
-    private fun getPostOrThrow(postId: Long): BlogPost =
-        repository.findById(postId).orElseThrow {
-            NoSuchElementException("Post not found: $postId")
-        }
 }
