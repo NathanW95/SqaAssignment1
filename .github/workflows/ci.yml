@@ -45,10 +45,19 @@ jobs:
       id: mutation
       run: ./gradlew checkMutationCoverage
 
-    - name: Upload mutation test report
+    - name: Deploy mutation report to GitHub Pages
       if: steps.mutation.outcome == 'success' || steps.mutation.outcome == 'failure'
-      uses: actions/upload-artifact@v4
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        name: mutation-test-report
-        path: build/reports/pitest/
-        retention-days: 30
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./build/reports/pitest
+        destination_dir: mutation-reports/${{ github.run_number }}
+        keep_files: true
+
+    - name: Add mutation report link to summary
+      if: steps.mutation.outcome == 'success' || steps.mutation.outcome == 'failure'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const reportUrl = `https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/mutation-reports/${{ github.run_number }}/index.html`;
+          core.summary.addRaw(`\n\n📊 **[View Interactive Mutation Report](${reportUrl})**\n`).write();
