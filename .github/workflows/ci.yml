@@ -39,3 +39,16 @@ jobs:
         path: build/test-results/test/*.xml
         reporter: java-junit
         fail-on-error: false
+
+    - name: Run mutation tests
+      if: steps.tests.outcome == 'success'
+      id: mutation
+      run: ./gradlew checkMutationCoverage
+
+    - name: Upload mutation test report
+      if: steps.mutation.outcome == 'success' || steps.mutation.outcome == 'failure'
+      uses: actions/upload-artifact@v4
+      with:
+        name: mutation-test-report
+        path: build/reports/pitest/
+        retention-days: 30
