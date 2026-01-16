@@ -70,6 +70,11 @@ pitest {
             "org.assignment.blog.model.*",
         ),
     )
+    avoidCallsTo.set(
+        listOf(
+            "kotlin.jvm.internal.Intrinsics",
+        ),
+    )
     threads.set(Runtime.getRuntime().availableProcessors())
     outputFormats.set(listOf("HTML", "XML"))
     timestampedReports.set(false)
